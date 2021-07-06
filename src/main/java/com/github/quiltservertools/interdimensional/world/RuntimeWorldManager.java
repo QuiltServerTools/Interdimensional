@@ -15,11 +15,8 @@ public class RuntimeWorldManager {
     private static final List<RuntimeWorldHandle> runtimeDimensionHandlers = new ArrayList<>();
 
     public static void add(RuntimeWorldConfig config, Identifier identifier) {
-        CompletableFuture<RuntimeWorldHandle> future = Interdimensional.FANTASY.getOrOpenPersistentWorld(identifier, config);
-        future.thenAccept(worldHandle -> {
-            runtimeDimensionHandlers.add(worldHandle);
-            Interdimensional.LOGGER.info("Opened world " + identifier);
-        });
+        RuntimeWorldHandle handle = Interdimensional.FANTASY.getOrOpenPersistentWorld(identifier, config);
+        runtimeDimensionHandlers.add(handle);
     }
 
     public static void closeAll() {

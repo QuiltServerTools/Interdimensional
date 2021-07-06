@@ -1,4 +1,4 @@
-package com.github.quiltservertools.interdimensional.utility;
+package com.github.quiltservertools.interdimensional.util;
 
 import net.minecraft.world.Difficulty;
 

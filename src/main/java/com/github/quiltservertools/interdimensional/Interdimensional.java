@@ -1,5 +1,7 @@
 package com.github.quiltservertools.interdimensional;
 
+import com.github.quiltservertools.interdimensional.command.CreateCommand;
+import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -27,10 +29,13 @@ public class Interdimensional implements DedicatedServerModInitializer {
 
     private void serverStarting(MinecraftServer server) {
         FANTASY = Fantasy.get(server);
-        CONFIG = Config.createConfig(FabricLoader.getInstance().getConfigDir().resolve("interdimensional.json"), server);
+        CONFIG = Config.createConfig(FabricLoader.getInstance().getConfigDir().resolve("dimensions.json"), server);
     }
 
     private void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
+        var root = InterdimensionalCommand.register(dispatcher);
+        dispatcher.getRoot().addChild(root);
+        root.addChild(new CreateCommand().register());
     }
 
     private void serverStopping(MinecraftServer server) {
