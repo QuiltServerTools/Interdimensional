@@ -19,14 +19,6 @@ public class RuntimeWorldManager {
         runtimeDimensionHandlers.add(handle);
     }
 
-    public static void closeAll() {
-        runtimeDimensionHandlers.removeIf(handle -> {
-            Interdimensional.LOGGER.info("Closed world " + handle.asWorld().getRegistryKey().getValue().toString());
-            handle.delete();
-            return true;
-        });
-    }
-
     public static ServerWorld get(Identifier identifier, MinecraftServer server) {
         var result = runtimeDimensionHandlers.stream().filter(h -> h.asWorld().getRegistryKey().getValue().equals(identifier)).findFirst();
         if (result.isPresent()) {

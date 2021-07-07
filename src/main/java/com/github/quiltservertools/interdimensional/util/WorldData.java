@@ -18,7 +18,7 @@ public record WorldData(long seed, Identifier dimension, Identifier chunkGenerat
         var generatorDim = server.getSaveProperties().getGeneratorOptions().getDimensions().get(chunkGeneratorDimId);
         var generator = generatorDim == null ? server.getSaveProperties().getGeneratorOptions().getChunkGenerator() : generatorDim.getChunkGenerator();
 
-        config.setGenerator(generator);
+        config.setGenerator(generator.withSeed(seed));
 
         config.setDifficulty(WorldConfigUtils.getDifficulty(difficulty));
 

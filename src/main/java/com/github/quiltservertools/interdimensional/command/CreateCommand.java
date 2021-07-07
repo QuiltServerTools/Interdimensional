@@ -36,13 +36,10 @@ public class CreateCommand implements Command {
 
         RuntimeWorldConfig config = new RuntimeWorldConfig();
         config.setDimensionType(like.getDimension());
-        config.setGenerator(like.getChunkManager().getChunkGenerator());
+        var generator = like.getChunkManager().getChunkGenerator();
+        config.setGenerator(generator);
         config.setSeed(scs.getWorld().getSeed());
         config.setDifficulty(scs.getWorld().getDifficulty());
-
-        if (propertyMap.containsKey("seed")) {
-            config.setSeed((long) propertyMap.get("seed"));
-        }
 
         if (propertyMap.containsKey("type")) {
             config.setDimensionType(((ServerWorld) propertyMap.get("type")).getDimension());
@@ -50,6 +47,14 @@ public class CreateCommand implements Command {
 
         if (propertyMap.containsKey("generator")) {
             config.setGenerator((Objects.requireNonNull(scs.getMinecraftServer().getSaveProperties().getGeneratorOptions().getDimensions().get((Identifier) propertyMap.get("generator")))).getChunkGenerator());
+        }
+
+        if (propertyMap.containsKey("seed")) {
+            config.setSeed((long) propertyMap.get("seed"));
+            if (config.getGenerator() != null) {
+                config.setGenerator(config.getGenerator().withSeed((long) propertyMap.get("seed")));
+                System.out.println(config.getGenerator().getMinimumY());
+            }
         }
 
         RuntimeWorldManager.add(config, identifier);
