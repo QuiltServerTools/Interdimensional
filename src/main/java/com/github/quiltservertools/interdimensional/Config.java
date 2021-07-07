@@ -1,12 +1,13 @@
 package com.github.quiltservertools.interdimensional;
 
-import com.github.quiltservertools.interdimensional.util.WorldData;
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,29 +15,28 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 public class Config {
-    private Config(JsonElement json, MinecraftServer server) {
+    private static Path path;
+    private Config(JsonElement json, Path newPath) {
         var dims = json.getAsJsonArray();
         dims.forEach(e -> {
             // Loading logic
-            var object = e.getAsJsonObject();
-            var identifier = new Identifier(object.get("identifier").getAsString());
-
-            var worldLike = new Identifier(object.get("world_like").getAsString());
-            var generator = new Identifier(object.get("generator_dimension").getAsString());
-            var seed = object.get("seed").getAsLong();
-            var difficulty = object.get("difficulty").getAsInt();
-            var gamerules = object.get("gamerules").getAsJsonObject();
-            var data = new WorldData(seed, worldLike, generator, difficulty, gamerules);
-            var config = data.toRuntimeWorldConfig(server);
-            RuntimeWorldManager.add(config, identifier);
+            var identifier = new Identifier(e.getAsString());
+            RuntimeWorldManager.add(new RuntimeWorldConfig(), identifier);
         });
+        path = newPath;
     }
 
     public void shutdown() {
-        RuntimeWorldManager.closeAll();
+        var json = new JsonArray();
+        RuntimeWorldManager.closeAll().forEach(json::add);
+        try {
+            Files.writeString(path, new GsonBuilder().setPrettyPrinting().create().toJson(json));
+        } catch (IOException e) {
+            Interdimensional.LOGGER.error("Unable to save Interdimensional config file");
+        }
     }
 
-    public static Config createConfig(Path path, MinecraftServer server) {
+    public static Config createConfig(Path path) {
         JsonElement json;
         try {
             json = new JsonParser().parse(Files.readString(path));
@@ -49,6 +49,6 @@ public class Config {
             }
             json = new JsonArray();
         }
-        return new Config(json, server);
+        return new Config(json, path);
     }
 }

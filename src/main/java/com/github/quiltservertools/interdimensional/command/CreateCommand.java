@@ -1,6 +1,7 @@
 package com.github.quiltservertools.interdimensional.command;
 
 import com.github.quiltservertools.interdimensional.command.argument.DimensionOverrideArgumentType;
+import com.github.quiltservertools.interdimensional.util.TextUtils;
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,6 +13,7 @@ import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 
@@ -33,6 +35,7 @@ public class CreateCommand implements Command {
     private int run(ServerWorld like, String args, Identifier identifier, CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         HashMap<String, Object> propertyMap = DimensionOverrideArgumentType.INSTANCE.rawProperties(args);
         var scs = ctx.getSource();
+        scs.sendFeedback(new LiteralText("Creating dimension " + identifier).formatted(TextUtils.INSTANCE.getInfoFormatting()), false);
 
         RuntimeWorldConfig config = new RuntimeWorldConfig();
         config.setDimensionType(like.getDimension());
@@ -58,6 +61,7 @@ public class CreateCommand implements Command {
         }
 
         RuntimeWorldManager.add(config, identifier);
+        scs.sendFeedback(new LiteralText("Created new world: " + identifier).formatted(TextUtils.INSTANCE.getSuccessFormatting()), true);
 
         return 1;
     }

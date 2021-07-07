@@ -1,9 +1,12 @@
 package com.github.quiltservertools.interdimensional.world;
 
 import com.github.quiltservertools.interdimensional.Interdimensional;
+import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 import xyz.nucleoid.fantasy.RuntimeWorldHandle;
 
@@ -22,10 +25,15 @@ public class RuntimeWorldManager {
     public static void remove(RuntimeWorldHandle handle) {
         runtimeDimensionHandlers.remove(handle);
         Interdimensional.LOGGER.info("Removed dimension" + handle.asWorld().getRegistryKey().getValue());
+        handle.delete();
     }
 
-    public static void closeAll() {
-        runtimeDimensionHandlers.forEach(RuntimeWorldManager::remove);
+    public static List<String> closeAll() {
+        var list = new ArrayList<String>();
+        runtimeDimensionHandlers.forEach(handle -> {
+            list.add(handle.asWorld().getRegistryKey().getValue().toString());
+        });
+        return list;
     }
 
     public static ServerWorld get(Identifier identifier, MinecraftServer server) {
@@ -35,5 +43,10 @@ public class RuntimeWorldManager {
         } else {
             return server.getOverworld();
         }
+    }
+
+    public static RuntimeWorldHandle getHandle(Identifier identifier, MinecraftServer server) {
+        var result = runtimeDimensionHandlers.stream().filter(h -> h.asWorld().getRegistryKey().getValue().equals(identifier)).findFirst();
+        return result.orElse(null);
     }
 }
