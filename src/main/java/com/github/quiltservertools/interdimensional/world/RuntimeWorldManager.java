@@ -19,6 +19,15 @@ public class RuntimeWorldManager {
         runtimeDimensionHandlers.add(handle);
     }
 
+    public static void remove(RuntimeWorldHandle handle) {
+        runtimeDimensionHandlers.remove(handle);
+        Interdimensional.LOGGER.info("Removed dimension" + handle.asWorld().getRegistryKey().getValue());
+    }
+
+    public static void closeAll() {
+        runtimeDimensionHandlers.forEach(RuntimeWorldManager::remove);
+    }
+
     public static ServerWorld get(Identifier identifier, MinecraftServer server) {
         var result = runtimeDimensionHandlers.stream().filter(h -> h.asWorld().getRegistryKey().getValue().equals(identifier)).findFirst();
         if (result.isPresent()) {
