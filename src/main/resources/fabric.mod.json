@@ -20,6 +20,9 @@
       "com.github.quiltservertools.interdimensional.Interdimensional"
     ]
   },
+  "mixins": [
+    "interdimensional.mixins.json"
+  ],
 
   "depends": {
     "fabricloader": ">=0.11.3",

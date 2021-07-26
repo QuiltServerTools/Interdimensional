@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 
@@ -20,7 +19,8 @@ public class Config {
         var dims = json.getAsJsonArray();
         dims.forEach(e -> {
             // Loading logic
-            var identifier = new Identifier(e.getAsString());
+            var object = e.getAsJsonObject();
+            var identifier = new Identifier(object.get("identifier").getAsString());
             RuntimeWorldManager.add(new RuntimeWorldConfig(), identifier);
         });
         path = newPath;

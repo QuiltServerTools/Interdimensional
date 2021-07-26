@@ -5,14 +5,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import xyz.nucleoid.fantasy.Fantasy;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 import xyz.nucleoid.fantasy.RuntimeWorldHandle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class RuntimeWorldManager {
     private static final List<RuntimeWorldHandle> runtimeDimensionHandlers = new ArrayList<>();
@@ -28,10 +26,12 @@ public class RuntimeWorldManager {
         handle.delete();
     }
 
-    public static List<String> closeAll() {
-        var list = new ArrayList<String>();
+    public static List<JsonObject> closeAll() {
+        var list = new ArrayList<JsonObject>();
         runtimeDimensionHandlers.forEach(handle -> {
-            list.add(handle.asWorld().getRegistryKey().getValue().toString());
+            var object = new JsonObject();
+            object.addProperty("identifier", handle.asWorld().getRegistryKey().getValue().toString());
+            list.add(object);
         });
         return list;
     }

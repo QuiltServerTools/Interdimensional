@@ -1,5 +1,6 @@
 package com.github.quiltservertools.interdimensional;
 
+import com.github.quiltservertools.interdimensional.command.BiomeSourceCommand;
 import com.github.quiltservertools.interdimensional.command.CreateCommand;
 import com.github.quiltservertools.interdimensional.command.DeleteCommand;
 import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand;
@@ -38,6 +39,7 @@ public class Interdimensional implements DedicatedServerModInitializer {
         dispatcher.getRoot().addChild(root);
         root.addChild(new CreateCommand().register());
         root.addChild(new DeleteCommand().register());
+        root.addChild(new BiomeSourceCommand().register());
     }
 
     private void serverStopping(MinecraftServer server) {
