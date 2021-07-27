@@ -1,11 +1,8 @@
 package com.github.quiltservertools.interdimensional;
 
-import com.github.quiltservertools.interdimensional.command.GeneratorCommand;
-import com.github.quiltservertools.interdimensional.command.CreateCommand;
-import com.github.quiltservertools.interdimensional.command.DeleteCommand;
-import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand;
+import com.github.quiltservertools.interdimensional.command.*;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
@@ -16,13 +13,13 @@ import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.fantasy.Fantasy;
 
 
-public class Interdimensional implements DedicatedServerModInitializer {
+public class Interdimensional implements ModInitializer {
     public static Fantasy FANTASY;
     public static Logger LOGGER;
     public static Config CONFIG;
 
     @Override
-    public void onInitializeServer() {
+    public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(this::serverStarting);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::serverStopping);
         LOGGER = LogManager.getLogger();

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "interdimensional",
-  "version": "1.0.0",
+  "version": "${version}",
 
   "name": "Interdimensional",
   "description": "A runtime dimensions mod for fabric",
@@ -14,9 +14,9 @@
   },
   "license": "LGPL-3.0",
 
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
-    "server": [
+    "main": [
       "com.github.quiltservertools.interdimensional.Interdimensional"
     ]
   },

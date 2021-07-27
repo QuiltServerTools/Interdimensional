@@ -14,7 +14,9 @@ repositories {
 	maven {
 		url = "https://maven.nucleoid.xyz"
 	}
-	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven {
+		url 'https://oss.sonatype.org/content/repositories/snapshots'
+	}
 }
 
 dependencies {
@@ -26,8 +28,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "xyz.nucleoid:fantasy:0.4.1+1.17"
-	modImplementation 'me.lucko:fabric-permissions-api:0.1-SNAPSHOT'
+	modImplementation(include("xyz.nucleoid:fantasy:0.4.1+1.17"))
+	modImplementation(include("me.lucko:fabric-permissions-api:0.1-SNAPSHOT"))
 
 }
 

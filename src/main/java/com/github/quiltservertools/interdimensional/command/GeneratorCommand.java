@@ -11,6 +11,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.source.*;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
@@ -19,8 +20,7 @@ import net.minecraft.world.gen.chunk.StructuresConfig;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.error;
-import static com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.success;
+import static com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.*;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -49,29 +49,35 @@ public class GeneratorCommand implements Command {
 
         if (propertyMap.containsKey("single_biome")) {
             biomeSource = new FixedBiomeSource(scs.getRegistryManager().get(Registry.BIOME_KEY).get(new Identifier((String) propertyMap.get("single_biome"))));
+            scs.sendFeedback(info("Set biome source to Single Biome"), false);
+
         } else if (propertyMap.containsKey("vanilla_layered")) {
             var largeBiomes = propertyMap.containsKey("large_biomes") && (boolean) propertyMap.get("large_biomes");
             biomeSource = new VanillaLayeredBiomeSource(biomeSeed, false, largeBiomes, scs.getRegistryManager().get(Registry.BIOME_KEY));
+            scs.sendFeedback(info("Set biome source to Vanilla Layered"), false);
+
         } else if (propertyMap.containsKey("multi_noise")) {
-          MultiNoiseBiomeSource.method_35242(scs.getRegistryManager().get(Registry.BIOME_KEY), biomeSeed);
+            MultiNoiseBiomeSource.method_35242(scs.getRegistryManager().get(Registry.BIOME_KEY), biomeSeed);
             scs.sendFeedback(error("This option is not supported yet"), false);
+
         } else if (propertyMap.containsKey("the_end_biome_source")) {
             biomeSource = new TheEndBiomeSource(scs.getRegistryManager().get(Registry.BIOME_KEY), biomeSeed);
+            scs.sendFeedback(info("Set biome source to End Biome Source"), false);
+
         } else {
             scs.sendFeedback(error("No biome source option specified, using default"), false);
         }
 
         ((ChunkGeneratorAccessor) generator).setBiomeSource(biomeSource);
 
-        scs.sendFeedback(success("Set biome source to " + biomeSource.getClass().getSimpleName()), false);
-
         StructuresConfig structuresConfig;
         // Handle structures
         if (propertyMap.containsKey("generate_structures") && (boolean) propertyMap.get("generate_structures")) {
             var generateStrongholds = propertyMap.containsKey("generate_strongholds") && (boolean) propertyMap.get("generate_strongholds");
-
             //TODO filtering out of structures through command params
             structuresConfig = new StructuresConfig(generateStrongholds ? Optional.of(StructuresConfig.DEFAULT_STRONGHOLD) : Optional.empty(), StructuresConfig.DEFAULT_STRUCTURES);
+            scs.sendFeedback(info("Set structures config to default" + (generateStrongholds ? " with strongholds" : "")), false);
+
         } else {
             structuresConfig = new StructuresConfig(Optional.empty(), new HashMap<>());
         }
@@ -83,6 +89,8 @@ public class GeneratorCommand implements Command {
         } else {
             ((ServerPlayerEntityAccess) scs.getPlayer()).setCustomGenerator(new FlatChunkGenerator(new FlatChunkGeneratorConfig(structuresConfig, scs.getRegistryManager().get(Registry.BIOME_KEY))));
         }
+
+        scs.sendFeedback(success("Updated generator configuration"), false);
 
         return 1;
     }
