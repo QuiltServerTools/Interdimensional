@@ -6,15 +6,12 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.command.ServerCommandSource;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -22,7 +19,6 @@ public abstract class AbstractInterdimensionalArgumentType implements Suggestion
 
     protected Set<String> criteria;
     protected HashMap<String, Suggestor> criteriumSuggestors = new HashMap<>();
-    //TODO allow custom suggestions in a suggestor
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context,
@@ -92,12 +88,12 @@ public abstract class AbstractInterdimensionalArgumentType implements Suggestion
     }
 
     static class Suggestor {
-        private final List<SuggestionProvider<ServerCommandSource>> suggestionList = new ArrayList<>();
         boolean useSuggestionProvider = false;
         private SuggestionProvider<ServerCommandSource> suggestionProvider;
-        private ArgumentType<?> argumentType;
+        private final ArgumentType<?> argumentType;
 
-        public Suggestor(SuggestionProvider<ServerCommandSource> suggestionProvider) {
+        public Suggestor( ArgumentType<?> argumentType, SuggestionProvider<ServerCommandSource> suggestionProvider) {
+            this.argumentType = argumentType;
             this.suggestionProvider = suggestionProvider;
             this.useSuggestionProvider = true;
         }
@@ -117,10 +113,6 @@ public abstract class AbstractInterdimensionalArgumentType implements Suggestion
             } else {
                 return this.argumentType.listSuggestions(context, builder);
             }
-        }
-
-        public void putSuggestions(SuggestionProvider<ServerCommandSource> provider) {
-            suggestionList.add(provider);
         }
 
         public int getRemaining(String s) {

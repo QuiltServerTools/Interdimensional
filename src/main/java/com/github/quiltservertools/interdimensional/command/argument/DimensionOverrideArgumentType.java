@@ -14,7 +14,7 @@ public class DimensionOverrideArgumentType extends AbstractInterdimensionalArgum
         criteriumSuggestors.put("type", new Suggestor(DimensionArgumentType.dimension()));
         criteriumSuggestors.put("generator", new Suggestor(DimensionArgumentType.dimension()));
         criteriumSuggestors.put("difficulty", new Suggestor(StringArgumentType.string()));
-        criteriumSuggestors.put("custom_biome_source", new Suggestor(BoolArgumentType.bool()));
+        criteriumSuggestors.put("custom_generator", new Suggestor(BoolArgumentType.bool()));
         this.criteria = criteriumSuggestors.keySet();
     }
 }
