@@ -12,13 +12,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.source.*;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.FlatChunkGenerator;
-import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
-import net.minecraft.world.gen.chunk.StructuresConfig;
+import net.minecraft.world.gen.chunk.*;
+import net.minecraft.world.gen.feature.StructureFeature;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 import static com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.*;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -65,18 +62,23 @@ public class GeneratorCommand implements Command {
             scs.sendFeedback(info("Set biome source to End Biome Source"), false);
 
         } else {
-            scs.sendFeedback(error("No biome source option specified, using default"), false);
+            scs.sendFeedback(info("No biome source option specified, using default"), false);
         }
 
         ((ChunkGeneratorAccessor) generator).setBiomeSource(biomeSource);
 
         StructuresConfig structuresConfig;
         // Handle structures
-        if (propertyMap.containsKey("generate_structures") && (boolean) propertyMap.get("generate_structures")) {
-            var generateStrongholds = propertyMap.containsKey("generate_strongholds") && (boolean) propertyMap.get("generate_strongholds");
-            //TODO filtering out of structures through command params
-            structuresConfig = new StructuresConfig(generateStrongholds ? Optional.of(StructuresConfig.DEFAULT_STRONGHOLD) : Optional.empty(), StructuresConfig.DEFAULT_STRUCTURES);
-            scs.sendFeedback(info("Set structures config to default" + (generateStrongholds ? " with strongholds" : "")), false);
+        if (!propertyMap.containsKey("generate_structures") || (boolean) propertyMap.get("generate_structures")) {
+            var generateStrongholds = !propertyMap.containsKey("generate_strongholds") || (boolean) propertyMap.get("generate_strongholds");
+            if (propertyMap.containsKey("exclude_structures")) {
+                structuresConfig = generateStructuresConfig(generateStrongholds, (String) propertyMap.get("exclude_structures"), true);
+            } else if (propertyMap.containsKey("include_structures")) {
+                structuresConfig = generateStructuresConfig(generateStrongholds, (String) propertyMap.get("include_structures"), false);
+            } else {
+                structuresConfig = generateStructuresConfig(generateStrongholds, "", true);
+            }
+            scs.sendFeedback(info("Set structures config to default" + (generateStrongholds ? " with strongholds" : "") + " and overrides"), false);
 
         } else {
             structuresConfig = new StructuresConfig(Optional.empty(), new HashMap<>());
@@ -93,5 +95,18 @@ public class GeneratorCommand implements Command {
         scs.sendFeedback(success("Updated generator configuration"), false);
 
         return 1;
+    }
+
+    private StructuresConfig generateStructuresConfig(boolean generateStrongholds, String list, boolean exclude) {
+        Optional<StrongholdConfig> strongholds = generateStrongholds ? Optional.of(StructuresConfig.DEFAULT_STRONGHOLD) : Optional.empty();
+        String[] split = list.split(",");
+        List<String> strings = new ArrayList<>(Arrays.asList(split));
+        Map<StructureFeature<?>, StructureConfig> features = new HashMap<>();
+        StructuresConfig.DEFAULT_STRUCTURES.forEach(((structureFeature, structureConfig) -> {
+            if ((exclude && !strings.contains(structureFeature.getName())) || (!exclude && strings.contains(structureFeature.getName()))) {
+                features.put(structureFeature, structureConfig);
+            }
+        }));
+        return new StructuresConfig(strongholds, features);
     }
 }

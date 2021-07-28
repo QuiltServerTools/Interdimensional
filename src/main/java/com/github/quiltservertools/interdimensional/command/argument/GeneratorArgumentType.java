@@ -2,6 +2,7 @@ package com.github.quiltservertools.interdimensional.command.argument;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 
@@ -25,6 +26,8 @@ public class GeneratorArgumentType extends AbstractInterdimensionalArgumentType 
         //Structures
         criteriumSuggestors.put("generate_structures", new Suggestor(BoolArgumentType.bool()));
         criteriumSuggestors.put("generate_strongholds", new Suggestor(BoolArgumentType.bool()));
+        criteriumSuggestors.put("exclude_structures", new Suggestor(StringArgumentType.string(), new StructureListArgumentType()));
+        criteriumSuggestors.put("include_structures", new Suggestor(StringArgumentType.string(), new StructureListArgumentType()));
 
         this.criteria = criteriumSuggestors.keySet();
     }

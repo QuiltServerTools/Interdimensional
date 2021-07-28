@@ -1,10 +1,7 @@
 package com.github.quiltservertools.interdimensional;
 
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 
@@ -15,20 +12,32 @@ import java.util.Objects;
 
 public class Config {
     private static Path path;
+
+    private final int version;
+
     private Config(JsonElement json, Path newPath) {
-        var dims = json.getAsJsonArray();
-        dims.forEach(e -> {
+        var object = json.getAsJsonObject();
+        var worlds = object.get("worlds").getAsJsonArray();
+        worlds.forEach(e -> {
             // Loading logic
-            var object = e.getAsJsonObject();
-            var identifier = new Identifier(object.get("identifier").getAsString());
+            var o = e.getAsJsonObject();
+            var identifier = new Identifier(o.get("identifier").getAsString());
             RuntimeWorldManager.add(new RuntimeWorldConfig(), identifier);
         });
+
+        this.version = object.get("version").getAsInt();
         path = newPath;
     }
 
+    public int getConfigVersion() {
+        return this.version;
+    }
+
     public void shutdown() {
-        var json = new JsonArray();
-        RuntimeWorldManager.closeAll().forEach(json::add);
+        var json = new JsonObject();
+        var worlds = new JsonArray();
+        RuntimeWorldManager.closeAll().forEach(worlds::add);
+        json.add("worlds", worlds);
         try {
             Files.writeString(path, new GsonBuilder().setPrettyPrinting().create().toJson(json));
         } catch (IOException e) {
