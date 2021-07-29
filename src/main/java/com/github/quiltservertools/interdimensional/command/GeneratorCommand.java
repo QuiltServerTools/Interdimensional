@@ -11,7 +11,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.source.*;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.feature.StructureFeature;
 

@@ -1,6 +1,7 @@
 package com.github.quiltservertools.interdimensional.command;
 
 import com.github.quiltservertools.interdimensional.command.argument.DimensionOverrideArgumentType;
+import com.github.quiltservertools.interdimensional.command.argument.GeneratorArgumentType;
 import com.github.quiltservertools.interdimensional.duck.ServerPlayerEntityAccess;
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -39,7 +40,6 @@ public class CreateCommand implements Command {
     }
 
     private int run(ServerWorld like, String args, Identifier identifier, CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        //FIXME suggestions don't appear unless key is fully typed
         HashMap<String, Object> propertyMap = DimensionOverrideArgumentType.INSTANCE.rawProperties(args);
         var scs = ctx.getSource();
         scs.sendFeedback(info("Creating dimension " + identifier), false);

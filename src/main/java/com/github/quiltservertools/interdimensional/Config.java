@@ -37,6 +37,7 @@ public class Config {
         var json = new JsonObject();
         var worlds = new JsonArray();
         RuntimeWorldManager.closeAll().forEach(worlds::add);
+        json.addProperty("version", version);
         json.add("worlds", worlds);
         try {
             Files.writeString(path, new GsonBuilder().setPrettyPrinting().create().toJson(json));

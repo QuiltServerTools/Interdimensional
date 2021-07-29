@@ -14,9 +14,7 @@ import java.util.concurrent.CompletableFuture;
 public class StructureListArgumentType implements SuggestionProvider<ServerCommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
-        var input = builder.getInput();
-        input = input.substring(input.lastIndexOf("exclude_structures:") != -1 ? input.lastIndexOf("exclude_structures:") : (input.lastIndexOf("include_structures:") != -1 ? input.lastIndexOf("include_structures:") : (0 )));
-        var server = context.getSource().getServer();
+        var input = builder.getRemaining();
         if (input.length() == 0) {
             for (Map.Entry<String, StructureFeature<?>> entry : StructureFeature.STRUCTURES.entrySet()) {
                 builder.suggest(entry.getKey());
@@ -37,7 +35,25 @@ public class StructureListArgumentType implements SuggestionProvider<ServerComma
                     current = input.substring(lastComma);
                 }
                 for (Map.Entry<String, StructureFeature<?>> entry : StructureFeature.STRUCTURES.entrySet()) {
-                    //TODO fix this
+                    for (int i = 0; i < current.length() - 1 && i < entry.getKey().length() - 1; i++) {
+                        if (current.endsWith(",")) {
+                            for (Map.Entry<String, StructureFeature<?>> entry1 : StructureFeature.STRUCTURES.entrySet()) {
+                                builder.suggest(input + entry1.getKey());
+                            }
+                        } else if (current.equals(entry.getKey())) {
+                            for (Map.Entry<String, StructureFeature<?>> entry1 : StructureFeature.STRUCTURES.entrySet()) {
+                                builder.suggest(input + "," + entry1.getKey());
+                            }
+                        } else {
+                            if (entry.getKey().startsWith(current)) {
+                                if (lastComma == -1) {
+                                    builder.suggest(entry.getKey());
+                                } else {
+                                    builder.suggest(input.substring(lastComma) + entry.getKey());
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
