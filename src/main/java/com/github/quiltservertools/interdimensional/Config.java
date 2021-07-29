@@ -47,9 +47,9 @@ public class Config {
     }
 
     public static Config createConfig(Path path) {
-        JsonElement json;
+        JsonObject json;
         try {
-            json = new JsonParser().parse(Files.readString(path));
+            json = new JsonParser().parse(Files.readString(path)).getAsJsonObject();
         } catch (IOException e) {
             try {
                 Files.copy(Objects.requireNonNull(Interdimensional.class.getResourceAsStream("/data/interdimensional/default_config.json")), path);
@@ -57,7 +57,9 @@ public class Config {
                 ioException.printStackTrace();
                 Interdimensional.LOGGER.error("Unable to create default config file for Interdimensional");
             }
-            json = new JsonArray();
+            json = new JsonObject();
+            json.addProperty("version", 1);
+            json.add("worlds", new JsonArray());
         }
         return new Config(json, path);
     }
