@@ -1,3 +1,21 @@
 # Interdimensional
 
-Readme coming soon
+[![discord](https://img.shields.io/discord/764543203772334100?label=discord)](https://discord.gg/ZfXPEmj66X)
+
+A fabric server-side mod for creating and managing custom dimensions
+
+## Use
+
+Interdimensional requires Fabric API. Simply place the jar in your mods folder and run your server
+
+### Commands
+
+More information can be found on the [Interdimensional Wiki](https://github.com/QuiltServerTools/Interdimensional/wiki)
+
+#### Permissions
+
+Interdimensional supports the Luckperms permissions API. See the [wiki](https://github.com/QuiltServerTools/Interdimensional/wiki)
+
+Commands: `interdimensional.command.<command>`
+
+Root node: `interdimensional.command.root`

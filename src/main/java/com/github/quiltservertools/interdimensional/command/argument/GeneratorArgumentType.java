@@ -15,7 +15,7 @@ public class GeneratorArgumentType extends AbstractInterdimensionalArgumentType 
         //Noise
         criteriumSuggestors.put("single_biome", new Suggestor(IdentifierArgumentType.identifier(), SuggestionProviders.ALL_BIOMES));
         criteriumSuggestors.put("vanilla_layered", new Suggestor(BoolArgumentType.bool()));
-        criteriumSuggestors.put("multi_noise", new Suggestor(BoolArgumentType.bool()));
+        //criteriumSuggestors.put("multi_noise", new Suggestor(BoolArgumentType.bool()));
         criteriumSuggestors.put("the_end_biome_source", new Suggestor(BoolArgumentType.bool()));
 
         //Options
