@@ -17,7 +17,9 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.github.quiltservertools.interdimensional.Interdimensional"
+      {
+        "value": "com.github.quiltservertools.interdimensional.Interdimensional::INSTANCE"
+      }
     ]
   },
   "mixins": [
@@ -28,6 +30,7 @@
     "fabricloader": ">=0.11.3",
     "fabric": ">=0.34.9",
     "minecraft": "1.17.x",
-    "fantasy": "0.4.1+1.17"
+    "fantasy": "0.4.1+1.17",
+    "fabric-language-kotlin": ">=1.6.0"
   }
 }
