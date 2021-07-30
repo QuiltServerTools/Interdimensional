@@ -3,6 +3,7 @@ package com.github.quiltservertools.interdimensional.command
 import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.info
 import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import com.github.quiltservertools.interdimensional.command.argument.DimensionOverrideArgumentType
+import com.github.quiltservertools.interdimensional.customGenerator
 import com.github.quiltservertools.interdimensional.duck.ServerPlayerEntityAccess
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager
 import com.mojang.brigadier.arguments.StringArgumentType
@@ -55,10 +56,10 @@ object CreateCommand : Command {
         scs.sendFeedback(info("Creating dimension $identifier"), false)
 
         val config = RuntimeWorldConfig()
-        val generator: ChunkGenerator = if ((scs.player as ServerPlayerEntityAccess).customGenerator == null || !(propertyMap["custom_generator"] as Boolean)) {
+        val generator: ChunkGenerator = if (scs.player.customGenerator == null || !(propertyMap["custom_generator"] as Boolean)) {
             maplike.chunkManager.chunkGenerator
         } else {
-            (scs.player as ServerPlayerEntityAccess).customGenerator
+            scs.player.customGenerator!!
         }
         config.setDimensionType(maplike.dimension)
         config.generator = generator

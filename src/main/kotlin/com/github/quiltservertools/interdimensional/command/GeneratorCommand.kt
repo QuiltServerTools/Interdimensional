@@ -1,6 +1,7 @@
 package com.github.quiltservertools.interdimensional.command
 
 import com.github.quiltservertools.interdimensional.command.argument.GeneratorArgumentType
+import com.github.quiltservertools.interdimensional.customGenerator
 import com.github.quiltservertools.interdimensional.duck.ServerPlayerEntityAccess
 import com.github.quiltservertools.interdimensional.mixin.ChunkGeneratorAccessor
 import com.mojang.brigadier.arguments.StringArgumentType
@@ -34,7 +35,7 @@ object GeneratorCommand : Command {
 
     @Throws(CommandSyntaxException::class)
     private fun updateGenerator(scs: ServerCommandSource, propertyMap: HashMap<String, Any>): Int {
-        var generator = (scs.player as ServerPlayerEntityAccess).customGenerator
+        var generator = scs.player.customGenerator
         if (generator == null) generator = scs.world.chunkManager.chunkGenerator
         var seed = scs.world.seed
         if (propertyMap.containsKey("seed")) {
@@ -87,9 +88,9 @@ object GeneratorCommand : Command {
         }
         (generator as ChunkGeneratorAccessor).structuresConfig = structuresConfig
         if (!(propertyMap.containsKey("superflat") && propertyMap["superflat"] as Boolean)) {
-            (scs.player as ServerPlayerEntityAccess).customGenerator = generator
+            scs.player.customGenerator = generator
         } else {
-            (scs.player as ServerPlayerEntityAccess).customGenerator =
+            scs.player.customGenerator =
                 FlatChunkGenerator(
                     FlatChunkGeneratorConfig(
                         structuresConfig,
