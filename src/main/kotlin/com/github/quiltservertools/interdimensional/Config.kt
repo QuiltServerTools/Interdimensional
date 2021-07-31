@@ -51,6 +51,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
                 json = JsonObject()
                 json.addProperty("version", 1)
                 json.add("worlds", JsonArray())
+                json.add("portals", JsonArray())
             }
             return Config(json, path)
         }
