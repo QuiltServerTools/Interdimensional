@@ -20,7 +20,7 @@ import xyz.nucleoid.fantasy.Fantasy
 object Interdimensional : ModInitializer {
 
     lateinit var FANTASY: Fantasy
-    lateinit var LOGGER: Logger
+    val LOGGER: Logger = LogManager.getLogger()
     private lateinit var CONFIG: Config
 
     override fun onInitialize() {
@@ -37,7 +37,6 @@ object Interdimensional : ModInitializer {
                 dispatcher
             )
         })
-        LOGGER = LogManager.getLogger()
     }
 
     private fun serverStarting(server: MinecraftServer) {
