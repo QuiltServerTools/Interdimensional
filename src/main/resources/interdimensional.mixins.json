@@ -4,8 +4,9 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ChunkGeneratorAccessor",
-    "MixinServerPlayerEntity",
-    "MixinChunkGenerator"
+    "MixinChunkGenerator",
+    "MixinCustomPortalsMod",
+    "MixinServerPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1

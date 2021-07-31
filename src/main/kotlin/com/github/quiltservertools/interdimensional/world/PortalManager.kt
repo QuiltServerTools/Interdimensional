@@ -4,6 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource
+import net.kyrptonaught.customportalapi.util.ColorUtil
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -34,16 +35,8 @@ object PortalManager {
                 PortalIgnitionSource.FIRE
             }
 
-            val portal = Portal(name, frameBlock, destination, r, g, b, flat, ignitionSource)
-            portals.add(portal)
-
-            val builder = CustomPortalBuilder.beginPortal()
-            builder.frameBlock(frameBlock)
-            builder.ignitionSource(ignitionSource)
-            if (flat) builder.flatPortal()
-            builder.tintColor(r, g, b)
-            builder.destDimID(destination)
-            builder.registerPortal()
+            val portal = Portal(name, frameBlock, destination, ColorUtil.getColorFromRGB(r, g, b), flat, ignitionSource)
+            addPortal(portal)
         }
     }
 
@@ -54,9 +47,12 @@ object PortalManager {
             jsonObject.addProperty("name_identifier", portal.name)
             jsonObject.addProperty("frame_block", Registry.BLOCK.getId(portal.frameBlock).toString())
             jsonObject.addProperty("destination", portal.destination.toString())
-            jsonObject.addProperty("r", portal.r)
-            jsonObject.addProperty("g", portal.g)
-            jsonObject.addProperty("b", portal.b)
+            val r: Int = portal.color shr 16 and 0xFF
+            val g: Int = portal.color shr 8 and 0xFF
+            val b: Int = portal.color and 0xFFC
+            jsonObject.addProperty("r", r)
+            jsonObject.addProperty("g", g)
+            jsonObject.addProperty("b", b)
             jsonObject.addProperty("horizontal", portal.horizontal)
 
             val sourceObject = JsonObject()
@@ -80,5 +76,16 @@ object PortalManager {
             array.add(jsonObject)
         }
         return array
+    }
+
+    fun addPortal(portal: Portal) {
+        val builder = CustomPortalBuilder.beginPortal()
+        builder.frameBlock(portal.frameBlock)
+        builder.ignitionSource(portal.source)
+        if (portal.horizontal) builder.flatPortal()
+        builder.tintColor(portal.color)
+        builder.destDimID(portal.destination)
+        builder.registerPortal()
+        portals.add(portal)
     }
 }

@@ -39,8 +39,6 @@ dependencies {
     modImplementation(include("me.lucko:fabric-permissions-api:0.1-SNAPSHOT"))
 
     modImplementation(include("net.kyrptonaught:customportalapi:0.0.1-beta39-1.17"))
-
-    modImplementation include("eu.pb4:polymer:0.1.0-rc.1+1.17.1")
 }
 
 processResources {

@@ -1,9 +1,6 @@
 package com.github.quiltservertools.interdimensional
 
-import com.github.quiltservertools.interdimensional.command.CreateCommand
-import com.github.quiltservertools.interdimensional.command.DeleteCommand
-import com.github.quiltservertools.interdimensional.command.GeneratorCommand
-import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand
+import com.github.quiltservertools.interdimensional.command.*
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
@@ -18,7 +15,7 @@ import org.apache.logging.log4j.Logger
 import xyz.nucleoid.fantasy.Fantasy
 
 object Interdimensional : ModInitializer {
-
+    
     lateinit var FANTASY: Fantasy
     val LOGGER: Logger = LogManager.getLogger()
     private lateinit var CONFIG: Config
@@ -50,6 +47,7 @@ object Interdimensional : ModInitializer {
         root.addChild(CreateCommand.register())
         root.addChild(DeleteCommand.register())
         root.addChild(GeneratorCommand.register())
+        root.addChild(PortalCommand.register())
     }
 
     private fun serverStopping() {
