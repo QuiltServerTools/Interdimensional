@@ -6,7 +6,7 @@ A fabric server-side mod for creating and managing custom dimensions
 
 ## Use
 
-Interdimensional requires Fabric API. Simply place the jar in your mods folder and run your server
+Interdimensional requires Fabric API and Fabric Language Kotlin. Simply place the jar in your mods folder and run your server
 
 ### Commands
 
