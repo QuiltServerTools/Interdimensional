@@ -12,13 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = CustomPortalsMod.class, remap = false)
 public class MixinCustomPortalsMod {
 
-    @SuppressWarnings("CannotFind")
-
     @Shadow
     @Mutable
     @Final
     public static String MOD_ID;
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>()V", at = @At("HEAD"))
     private static void updateModid(CallbackInfo ci) {
         MOD_ID = "interdimensional";

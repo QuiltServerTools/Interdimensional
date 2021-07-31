@@ -25,8 +25,9 @@ class Config private constructor(json: JsonElement, newPath: Path) {
         json.addProperty("version", configVersion)
         json.add("worlds", worlds)
         json.add("portals", PortalManager.toJson())
+        val gson = GsonBuilder().setPrettyPrinting().create()
         try {
-            Files.writeString(path, GsonBuilder().setPrettyPrinting().create().toJson(json))
+            Files.write(path, gson.toJson(json).toByteArray())
         } catch (e: IOException) {
             Interdimensional.LOGGER.error("Unable to save Interdimensional config file")
         }
