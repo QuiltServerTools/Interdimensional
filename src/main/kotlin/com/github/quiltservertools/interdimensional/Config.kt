@@ -1,5 +1,6 @@
 package com.github.quiltservertools.interdimensional
 
+import com.github.quiltservertools.interdimensional.world.PortalManager
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager
 import com.google.gson.*
 import net.minecraft.util.Identifier
@@ -23,6 +24,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
         })
         json.addProperty("version", configVersion)
         json.add("worlds", worlds)
+        json.add("portals", PortalManager.toJson())
         try {
             Files.writeString(path, GsonBuilder().setPrettyPrinting().create().toJson(json))
         } catch (e: IOException) {
@@ -65,6 +67,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
             RuntimeWorldManager.add(RuntimeWorldConfig(), identifier)
         })
         configVersion = jsonObject["version"].asInt
+        PortalManager.fromJson(jsonObject["portals"].asJsonArray)
         path = newPath
     }
 }
