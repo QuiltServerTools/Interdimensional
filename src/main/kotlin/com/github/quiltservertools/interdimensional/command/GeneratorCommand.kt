@@ -23,11 +23,11 @@ object GeneratorCommand : Command {
         return CommandManager.literal("generator")
             .requires(Permissions.require("interdimensional.commands.generator", 3))
             .then(CommandManager.argument("args", StringArgumentType.greedyString())
-                .suggests(GeneratorArgumentType)
+                .suggests(GeneratorArgumentType())
                 .executes { ctx: CommandContext<ServerCommandSource> ->
                     updateGenerator(
                         ctx.source,
-                        GeneratorArgumentType.rawProperties(StringArgumentType.getString(ctx, "args"))
+                        GeneratorArgumentType().rawProperties(StringArgumentType.getString(ctx, "args"))
                     )
                 })
             .build()

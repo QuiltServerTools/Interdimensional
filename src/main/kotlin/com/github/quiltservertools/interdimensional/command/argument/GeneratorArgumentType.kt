@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.command.suggestion.SuggestionProviders
 
-object GeneratorArgumentType : AbstractInterdimensionalArgumentType() {
+class GeneratorArgumentType : AbstractInterdimensionalArgumentType() {
 
     init {
         criteriumSuggestors["seed"] = Suggestor(LongArgumentType.longArg())

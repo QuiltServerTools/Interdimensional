@@ -1,5 +1,6 @@
 package com.github.quiltservertools.interdimensional
 
+import com.github.quiltservertools.interdimensional.world.PortalManager
 import com.github.quiltservertools.interdimensional.world.RuntimeWorldManager
 import com.google.gson.*
 import net.minecraft.util.Identifier
@@ -23,8 +24,10 @@ class Config private constructor(json: JsonElement, newPath: Path) {
         })
         json.addProperty("version", configVersion)
         json.add("worlds", worlds)
+        json.add("portals", PortalManager.toJson())
+        val gson = GsonBuilder().setPrettyPrinting().create()
         try {
-            Files.writeString(path, GsonBuilder().setPrettyPrinting().create().toJson(json))
+            Files.write(path, gson.toJson(json).toByteArray())
         } catch (e: IOException) {
             Interdimensional.LOGGER.error("Unable to save Interdimensional config file")
         }
@@ -49,6 +52,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
                 json = JsonObject()
                 json.addProperty("version", 1)
                 json.add("worlds", JsonArray())
+                json.add("portals", JsonArray())
             }
             return Config(json, path)
         }
@@ -65,6 +69,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
             RuntimeWorldManager.add(RuntimeWorldConfig(), identifier)
         })
         configVersion = jsonObject["version"].asInt
+        PortalManager.fromJson(jsonObject["portals"].asJsonArray)
         path = newPath
     }
 }
