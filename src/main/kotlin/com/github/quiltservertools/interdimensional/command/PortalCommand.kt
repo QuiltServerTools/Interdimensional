@@ -6,6 +6,7 @@ import com.github.quiltservertools.interdimensional.world.PortalManager
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.tree.LiteralCommandNode
+import me.lucko.fabric.api.permissions.v0.Permissions
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource
 import net.minecraft.command.argument.BlockStateArgument
 import net.minecraft.command.argument.BlockStateArgumentType
@@ -20,6 +21,7 @@ import net.minecraft.util.Identifier
 object PortalCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
         return literal("portal")
+            .requires(Permissions.require("interdimensional.command.portal", 3))
             .then(
                 literal("add").then(
                     argument("name", StringArgumentType.string()).then(
@@ -52,7 +54,7 @@ object PortalCommand : Command {
                     )
                 )
             )
-            .then(literal("remove").then(argument("name", StringArgumentType.string()).executes {
+            .then(literal("remove").requires(Permissions.require("interdimensional.command.portal.delete", 4)).then(argument("name", StringArgumentType.string()).executes {
                 remove(
                     it.source,
                     StringArgumentType.getString(it, "name")
