@@ -71,7 +71,11 @@ object PortalCommand : Command {
     ): Int {
         //TODO add support for custom items
         val ignitionSource = PortalIgnitionSource.FIRE
-        PortalManager.addPortal(Portal(name, blockState.blockState.block, destination, color.colorIndex, flat, ignitionSource))
+        val red: Int = color.colorIndex shr 16 and 0xFF
+        val green: Int = color.colorIndex shr 8 and 0xFF
+        val blue: Int = color.colorIndex and 0xFF
+
+        PortalManager.addPortal(Portal(name, blockState.blockState.block, destination, red.toByte(), green.toByte(), blue.toByte(), flat, ignitionSource))
         source.sendFeedback(success("Created portal to $destination with frame ${blockState.blockState.block}"), false)
 
         return 1

@@ -17,9 +17,9 @@ object PortalManager {
             val name = jsonObject.get("name_identifier").asString
             val frameBlock = Registry.BLOCK.get(Identifier(jsonObject.get("frame_block").asString))
             val destination = Identifier(jsonObject.get("destination").asString)
-            val r = jsonObject.get("r").asInt
-            val g = jsonObject.get("g").asInt
-            val b = jsonObject.get("b").asInt
+            val r = jsonObject.get("r").asByte
+            val g = jsonObject.get("g").asByte
+            val b = jsonObject.get("b").asByte
             val flat = jsonObject.get("horizontal").asBoolean
 
             // Source parsing
@@ -35,7 +35,7 @@ object PortalManager {
                 PortalIgnitionSource.FIRE
             }
 
-            val portal = Portal(name, frameBlock, destination, ColorUtil.getColorFromRGB(r, g, b), flat, ignitionSource)
+            val portal = Portal(name, frameBlock, destination, r, g, b, flat, ignitionSource)
             addPortal(portal)
         }
     }
@@ -47,12 +47,9 @@ object PortalManager {
             jsonObject.addProperty("name_identifier", portal.name)
             jsonObject.addProperty("frame_block", Registry.BLOCK.getId(portal.frameBlock).toString())
             jsonObject.addProperty("destination", portal.destination.toString())
-            val r: Int = portal.color shr 16 and 0xFF
-            val g: Int = portal.color shr 8 and 0xFF
-            val b: Int = portal.color and 0xFFC
-            jsonObject.addProperty("r", r)
-            jsonObject.addProperty("g", g)
-            jsonObject.addProperty("b", b)
+            jsonObject.addProperty("r", portal.r)
+            jsonObject.addProperty("g", portal.g)
+            jsonObject.addProperty("b", portal.b)
             jsonObject.addProperty("horizontal", portal.horizontal)
 
             val sourceObject = JsonObject()
@@ -83,7 +80,7 @@ object PortalManager {
         builder.frameBlock(portal.frameBlock)
         builder.ignitionSource(portal.source)
         if (portal.horizontal) builder.flatPortal()
-        builder.tintColor(portal.color)
+        builder.tintColor(portal.r.toInt(), portal.g.toInt(), portal.b.toInt())
         builder.destDimID(portal.destination)
         builder.registerPortal()
         portals.add(portal)
