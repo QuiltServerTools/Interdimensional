@@ -22,8 +22,9 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         val input = builder.input
+        val remainingInput = builder.remaining
         val lastSpaceIndex = input.lastIndexOf(' ')
-        val inputArr = input.toCharArray()
+        val inputArr = remainingInput.toCharArray()
         var lastColonIndex = -1
         for (i in inputArr.indices.reversed()) {
             val c = inputArr[i]
@@ -33,13 +34,13 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
                 break
             }
         }
-        if (lastColonIndex == -1) { // no colon, just suggest criteria
+            if (lastColonIndex == -1) { // no colon, just suggest criteria
             val offsetBuilder = builder.createOffset(lastSpaceIndex + 1)
             builder.add(suggestCriteria(offsetBuilder))
         } else { // take last colon
-            val spaceSplit = input.substring(0, lastColonIndex).split(" ".toRegex()).toTypedArray()
+            val spaceSplit = remainingInput.substring(0, lastColonIndex).split(" ".toRegex()).toTypedArray()
             val criterium = spaceSplit[spaceSplit.size - 1]
-            val criteriumArg = input.substring(lastColonIndex + 1)
+            val criteriumArg = remainingInput.substring(lastColonIndex + 1)
             return if (!criteriumSuggestors.containsKey(criterium)) {
                 builder.buildFuture()
             } else { // check if suggestor consumes the rest
@@ -49,7 +50,7 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
                     val offsetBuilder = builder.createOffset(input.length - remaining + 1)
                     suggestCriteria(offsetBuilder).buildFuture()
                 } else {
-                    val offsetBuilder = builder.createOffset(lastColonIndex + 1)
+                    val offsetBuilder = builder.createOffset(input.lastIndexOf(":") + 1)
                     suggestor.listSuggestions(context, offsetBuilder)
                 }
             }
