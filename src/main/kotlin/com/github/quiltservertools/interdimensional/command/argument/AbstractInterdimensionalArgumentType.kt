@@ -14,11 +14,11 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import kotlin.collections.HashSet
 
-abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerCommandSource?> {
-    var criteria: Set<String>? = HashSet<String>()
+abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerCommandSource> {
+    var criteria: Set<String> = HashSet()
     var criteriumSuggestors = HashMap<String, Suggestor>()
     override fun getSuggestions(
-        context: CommandContext<ServerCommandSource?>,
+        context: CommandContext<ServerCommandSource>,
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         val input = builder.input
@@ -59,7 +59,7 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
     }
 
     @Throws(CommandSyntaxException::class)
-    fun rawProperties(s: String?): HashMap<String, Any> {
+    fun rawProperties(s: String): HashMap<String, Any> {
         val reader = StringReader(s)
         val result = HashMap<String, Any>()
         while (reader.canRead()) {
@@ -73,8 +73,8 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
     }
 
     private fun suggestCriteria(builder: SuggestionsBuilder): SuggestionsBuilder {
-        val input = builder.remaining.lowercase(Locale.getDefault())
-        for (criterium in criteria!!) {
+        val input = builder.remainingLowerCase
+        for (criterium in criteria) {
             if (criterium.startsWith(input)) {
                 builder.suggest("$criterium:")
             }
@@ -82,12 +82,12 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
         return builder
     }
 
-    class Suggestor {
+    open class Suggestor {
         var useSuggestionProvider = false
-        private var suggestionProvider: SuggestionProvider<ServerCommandSource?>? = null
+        private var suggestionProvider: SuggestionProvider<ServerCommandSource>? = null
         private val argumentType: ArgumentType<*>
 
-        constructor(argumentType: ArgumentType<*>, suggestionProvider: SuggestionProvider<ServerCommandSource?>?) {
+        constructor(argumentType: ArgumentType<*>, suggestionProvider: SuggestionProvider<ServerCommandSource>) {
             this.argumentType = argumentType
             this.suggestionProvider = suggestionProvider
             useSuggestionProvider = true
@@ -97,8 +97,8 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
             this.argumentType = argumentType
         }
 
-        fun listSuggestions(
-            context: CommandContext<ServerCommandSource?>?,
+        open fun listSuggestions(
+            context: CommandContext<ServerCommandSource>,
             builder: SuggestionsBuilder
         ): CompletableFuture<Suggestions> {
             return if (useSuggestionProvider) {
@@ -127,7 +127,7 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
         }
 
         @Throws(CommandSyntaxException::class)
-        fun parse(reader: StringReader): Any {
+        open fun parse(reader: StringReader): Any {
             return if (useSuggestionProvider) {
                 val startPos = reader.cursor
                 try {

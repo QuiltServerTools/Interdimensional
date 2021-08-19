@@ -10,8 +10,8 @@ import xyz.nucleoid.fantasy.RuntimeWorldHandle
 import java.util.function.Consumer
 
 object RuntimeWorldManager {
-    private val runtimeDimensionHandlers: MutableList<RuntimeWorldHandle?> = ArrayList()
-    fun add(config: RuntimeWorldConfig?, identifier: Identifier?) {
+    private val runtimeDimensionHandlers: MutableList<RuntimeWorldHandle> = ArrayList()
+    fun add(config: RuntimeWorldConfig, identifier: Identifier) {
         val handle = Interdimensional.FANTASY.getOrOpenPersistentWorld(identifier, config)
         runtimeDimensionHandlers.add(handle)
     }
@@ -24,17 +24,17 @@ object RuntimeWorldManager {
 
     fun closeAll(): List<JsonObject> {
         val list = ArrayList<JsonObject>()
-        runtimeDimensionHandlers.forEach(Consumer { handle: RuntimeWorldHandle? ->
+        runtimeDimensionHandlers.forEach(Consumer { handle: RuntimeWorldHandle ->
             val `object` = JsonObject()
-            `object`.addProperty("identifier", handle!!.asWorld().registryKey.value.toString())
+            `object`.addProperty("identifier", handle.asWorld().registryKey.value.toString())
             list.add(`object`)
         })
         return list
     }
 
     operator fun get(identifier: Identifier, server: MinecraftServer): ServerWorld {
-        val result = runtimeDimensionHandlers.stream().filter { h: RuntimeWorldHandle? ->
-            h!!.asWorld().registryKey.value == identifier
+        val result = runtimeDimensionHandlers.stream().filter { h: RuntimeWorldHandle ->
+            h.asWorld().registryKey.value == identifier
         }.findFirst()
         return if (result.isPresent) {
             result.get().asWorld()
@@ -43,9 +43,9 @@ object RuntimeWorldManager {
         }
     }
 
-    fun getHandle(identifier: Identifier): RuntimeWorldHandle? {
-        val result = runtimeDimensionHandlers.stream().filter { h: RuntimeWorldHandle? ->
-            h!!.asWorld().registryKey.value == identifier
+    fun getHandle(identifier: Identifier): RuntimeWorldHandle {
+        val result = runtimeDimensionHandlers.stream().filter { h: RuntimeWorldHandle ->
+            h.asWorld().registryKey.value == identifier
         }.findFirst()
         return result.orElse(null)
     }

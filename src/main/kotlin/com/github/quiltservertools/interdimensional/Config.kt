@@ -17,7 +17,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
     fun shutdown() {
         val json = JsonObject()
         val worlds = JsonArray()
-        RuntimeWorldManager.closeAll().forEach(Consumer { element: JsonObject? ->
+        RuntimeWorldManager.closeAll().forEach(Consumer { element: JsonObject ->
             worlds.add(
                 element
             )

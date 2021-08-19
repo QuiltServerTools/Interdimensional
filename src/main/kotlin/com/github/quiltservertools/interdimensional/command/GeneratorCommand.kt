@@ -48,7 +48,7 @@ object GeneratorCommand : Command {
         if (propertyMap.containsKey("single_biome")) {
             biomeSource = FixedBiomeSource(
                 scs.registryManager.get(Registry.BIOME_KEY)[Identifier(
-                    propertyMap["single_biome"] as String?
+                    propertyMap["single_biome"] as String
                 )]
             )
             scs.sendFeedback(InterdimensionalCommand.info("Set biome source to Single Biome"), false)
@@ -73,9 +73,9 @@ object GeneratorCommand : Command {
             val generateStrongholds =
                 !propertyMap.containsKey("generate_strongholds") || propertyMap["generate_strongholds"] as Boolean
             structuresConfig = if (propertyMap.containsKey("exclude_structures")) {
-                generateStructuresConfig(generateStrongholds, propertyMap["exclude_structures"] as String?, true)
+                generateStructuresConfig(generateStrongholds, propertyMap["exclude_structures"] as String, true)
             } else if (propertyMap.containsKey("include_structures")) {
-                generateStructuresConfig(generateStrongholds, propertyMap["include_structures"] as String?, false)
+                generateStructuresConfig(generateStrongholds, propertyMap["include_structures"] as String, false)
             } else {
                 generateStructuresConfig(generateStrongholds, "", true)
             }
@@ -104,12 +104,12 @@ object GeneratorCommand : Command {
 
     private fun generateStructuresConfig(
         generateStrongholds: Boolean,
-        list: String?,
+        list: String,
         exclude: Boolean
     ): StructuresConfig {
         val strongholds =
             if (generateStrongholds) Optional.of(StructuresConfig.DEFAULT_STRONGHOLD) else Optional.empty()
-        val split = list!!.split(",".toRegex()).toTypedArray()
+        val split = list.split(",".toRegex()).toTypedArray()
         val strings: List<String> = ArrayList(listOf(*split))
         val features: MutableMap<StructureFeature<*>, StructureConfig> = HashMap()
         StructuresConfig.DEFAULT_STRUCTURES.forEach { (structureFeature: StructureFeature<*>, structureConfig: StructureConfig) ->
