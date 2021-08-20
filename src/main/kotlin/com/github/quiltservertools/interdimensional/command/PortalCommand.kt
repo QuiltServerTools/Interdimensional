@@ -1,23 +1,6 @@
 package com.github.quiltservertools.interdimensional.command
 
-import com.github.quiltservertools.interdimensional.command.InterdimensionalCommand.success
-import com.github.quiltservertools.interdimensional.world.Portal
-import com.github.quiltservertools.interdimensional.world.PortalManager
-import com.mojang.brigadier.arguments.BoolArgumentType
-import com.mojang.brigadier.arguments.StringArgumentType
-import com.mojang.brigadier.tree.LiteralCommandNode
-import me.lucko.fabric.api.permissions.v0.Permissions
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource
-import net.minecraft.command.argument.BlockStateArgument
-import net.minecraft.command.argument.BlockStateArgumentType
-import net.minecraft.command.argument.ColorArgumentType
-import net.minecraft.command.argument.DimensionArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
-
+/* fixme
 object PortalCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
         return literal("portal")
@@ -89,3 +72,4 @@ object PortalCommand : Command {
         return 1
     }
 }
+ */

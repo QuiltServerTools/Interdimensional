@@ -5,7 +5,6 @@
   "mixins": [
     "ChunkGeneratorAccessor",
     "MixinChunkGenerator",
-    "MixinCustomPortalsMod",
     "MixinServerPlayerEntity"
   ],
   "injectors": {

@@ -1,13 +1,6 @@
 package com.github.quiltservertools.interdimensional.world
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import net.kyrptonaught.customportalapi.api.CustomPortalBuilder
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource
-import net.kyrptonaught.customportalapi.util.ColorUtil
-import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
-
+/* fixme
 object PortalManager {
     var portals: MutableList<Portal> = mutableListOf()
 
@@ -86,3 +79,4 @@ object PortalManager {
         portals.add(portal)
     }
 }
+ */

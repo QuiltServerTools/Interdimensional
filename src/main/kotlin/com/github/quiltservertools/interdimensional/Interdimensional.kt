@@ -47,7 +47,7 @@ object Interdimensional : ModInitializer {
         root.addChild(CreateCommand.register())
         root.addChild(DeleteCommand.register())
         root.addChild(GeneratorCommand.register())
-        root.addChild(PortalCommand.register())
+        // fixme root.addChild(PortalCommand.register())
     }
 
     private fun serverStopping() {
