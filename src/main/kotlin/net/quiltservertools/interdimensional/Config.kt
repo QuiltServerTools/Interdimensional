@@ -1,4 +1,4 @@
-package net.quiltservertools.interdimensional
+package com.github.quiltservertools.interdimensional
 
 import net.quiltservertools.interdimensional.world.PortalManager
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager
@@ -17,14 +17,14 @@ class Config private constructor(json: JsonElement, newPath: Path) {
     fun shutdown() {
         val json = JsonObject()
         val worlds = JsonArray()
-        RuntimeWorldManager.closeAll().forEach(Consumer { element: JsonObject? ->
+        RuntimeWorldManager.closeAll().forEach(Consumer { element: JsonObject ->
             worlds.add(
                 element
             )
         })
         json.addProperty("version", configVersion)
         json.add("worlds", worlds)
-        json.add("portals", PortalManager.toJson())
+        // fixme json.add("portals", PortalManager.toJson())
         val gson = GsonBuilder().setPrettyPrinting().create()
         try {
             Files.write(path, gson.toJson(json).toByteArray())

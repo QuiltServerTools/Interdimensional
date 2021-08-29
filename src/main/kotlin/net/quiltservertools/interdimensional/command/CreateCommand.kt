@@ -25,23 +25,23 @@ object CreateCommand : Command {
         return CommandManager.literal("create")
             .requires(Permissions.require("interdimensional.command.create", 3))
             .then(CommandManager.argument("identifier", IdentifierArgumentType.identifier())
-                .then(CommandManager.argument("maplike", DimensionArgumentType.dimension())
-                    .executes { ctx: CommandContext<ServerCommandSource?>? ->
+                .then(ServerDimensionArgument.dimension("maplike")
+                    .executes { ctx: CommandContext<ServerCommandSource> ->
                         run(
-                            DimensionArgumentType.getDimensionArgument(ctx, "maplike"),
+                            ServerDimensionArgument.get(ctx, "maplike"),
                             "",
                             IdentifierArgumentType.getIdentifier(ctx, "identifier"),
-                            ctx!!
+                            ctx
                         )
                     }
                     .then(CommandManager.argument("overrides", StringArgumentType.greedyString())
                         .suggests(DimensionOverrideArgumentType)
-                        .executes { ctx: CommandContext<ServerCommandSource?>? ->
+                        .executes { ctx: CommandContext<ServerCommandSource> ->
                             run(
-                                DimensionArgumentType.getDimensionArgument(ctx, "maplike"),
+                                ServerDimensionArgument.get(ctx, "maplike"),
                                 StringArgumentType.getString(ctx, "overrides"),
                                 IdentifierArgumentType.getIdentifier(ctx, "identifier"),
-                                ctx!!
+                                ctx
                             )
                         })
                 )
@@ -49,28 +49,37 @@ object CreateCommand : Command {
             .build()
     }
 
-    private fun run(maplike: ServerWorld, args: String, identifier: Identifier, ctx: CommandContext<ServerCommandSource?>): Int {
+    private fun run(
+        maplike: ServerWorld,
+        args: String,
+        identifier: Identifier,
+        ctx: CommandContext<ServerCommandSource>
+    ): Int {
         val propertyMap: HashMap<String, Any> = DimensionOverrideArgumentType.rawProperties(args)
         val scs = ctx.source!!
         scs.sendFeedback(info("Creating dimension $identifier"), false)
 
         val config = RuntimeWorldConfig()
-        val generator: ChunkGenerator = if (scs.player.customGenerator == null || !(propertyMap["custom_generator"] as Boolean)) {
-            maplike.chunkManager.chunkGenerator
-        } else {
-            scs.player.customGenerator!!
-        }
+        val generator: ChunkGenerator =
+            if (scs.player.customGenerator != null && propertyMap.containsKey("custom_generator") && propertyMap["custom_generator"] as Boolean) {
+                scs.player.customGenerator!!
+            } else {
+                maplike.chunkManager.chunkGenerator
+            }
         config.setDimensionType(maplike.dimension)
         config.generator = generator
         config.seed = scs.world.seed
         config.difficulty = scs.world.difficulty
 
         if (propertyMap.containsKey("type")) {
-            config.setDimensionType(scs.server.registryManager.get(Registry.DIMENSION_TYPE_KEY).get(propertyMap["type"] as Identifier))
+            config.setDimensionType(
+                scs.server.registryManager.get(Registry.DIMENSION_TYPE_KEY).get(propertyMap["type"] as Identifier)
+            )
         }
         if (propertyMap.containsKey("generator")) {
-            config.generator = scs.server.saveProperties.generatorOptions.dimensions.get(propertyMap["generator"] as Identifier)
-                ?.chunkGenerator ?: maplike.chunkManager.chunkGenerator
+            config.generator =
+                scs.server.saveProperties.generatorOptions.dimensions.get(propertyMap["generator"] as Identifier)
+                    ?.chunkGenerator ?: maplike.chunkManager.chunkGenerator
         }
 
         if (propertyMap.containsKey("seed")) {

@@ -14,16 +14,17 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import kotlin.collections.HashSet
 
-abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerCommandSource?> {
-    var criteria: Set<String>? = HashSet<String>()
+abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerCommandSource> {
+    var criteria: Set<String> = HashSet()
     var criteriumSuggestors = HashMap<String, Suggestor>()
     override fun getSuggestions(
-        context: CommandContext<ServerCommandSource?>,
+        context: CommandContext<ServerCommandSource>,
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         val input = builder.input
+        val remainingInput = builder.remaining
         val lastSpaceIndex = input.lastIndexOf(' ')
-        val inputArr = input.toCharArray()
+        val inputArr = remainingInput.toCharArray()
         var lastColonIndex = -1
         for (i in inputArr.indices.reversed()) {
             val c = inputArr[i]
@@ -33,13 +34,13 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
                 break
             }
         }
-        if (lastColonIndex == -1) { // no colon, just suggest criteria
+            if (lastColonIndex == -1) { // no colon, just suggest criteria
             val offsetBuilder = builder.createOffset(lastSpaceIndex + 1)
             builder.add(suggestCriteria(offsetBuilder))
         } else { // take last colon
-            val spaceSplit = input.substring(0, lastColonIndex).split(" ".toRegex()).toTypedArray()
+            val spaceSplit = remainingInput.substring(0, lastColonIndex).split(" ".toRegex()).toTypedArray()
             val criterium = spaceSplit[spaceSplit.size - 1]
-            val criteriumArg = input.substring(lastColonIndex + 1)
+            val criteriumArg = remainingInput.substring(lastColonIndex + 1)
             return if (!criteriumSuggestors.containsKey(criterium)) {
                 builder.buildFuture()
             } else { // check if suggestor consumes the rest
@@ -49,7 +50,7 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
                     val offsetBuilder = builder.createOffset(input.length - remaining + 1)
                     suggestCriteria(offsetBuilder).buildFuture()
                 } else {
-                    val offsetBuilder = builder.createOffset(lastColonIndex + 1)
+                    val offsetBuilder = builder.createOffset(input.lastIndexOf(":") + 1)
                     suggestor.listSuggestions(context, offsetBuilder)
                 }
             }
@@ -58,7 +59,7 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
     }
 
     @Throws(CommandSyntaxException::class)
-    fun rawProperties(s: String?): HashMap<String, Any> {
+    fun rawProperties(s: String): HashMap<String, Any> {
         val reader = StringReader(s)
         val result = HashMap<String, Any>()
         while (reader.canRead()) {
@@ -72,8 +73,8 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
     }
 
     private fun suggestCriteria(builder: SuggestionsBuilder): SuggestionsBuilder {
-        val input = builder.remaining.lowercase(Locale.getDefault())
-        for (criterium in criteria!!) {
+        val input = builder.remainingLowerCase
+        for (criterium in criteria) {
             if (criterium.startsWith(input)) {
                 builder.suggest("$criterium:")
             }
@@ -81,12 +82,12 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
         return builder
     }
 
-    class Suggestor {
+    open class Suggestor {
         var useSuggestionProvider = false
-        private var suggestionProvider: SuggestionProvider<ServerCommandSource?>? = null
+        private var suggestionProvider: SuggestionProvider<ServerCommandSource>? = null
         private val argumentType: ArgumentType<*>
 
-        constructor(argumentType: ArgumentType<*>, suggestionProvider: SuggestionProvider<ServerCommandSource?>?) {
+        constructor(argumentType: ArgumentType<*>, suggestionProvider: SuggestionProvider<ServerCommandSource>) {
             this.argumentType = argumentType
             this.suggestionProvider = suggestionProvider
             useSuggestionProvider = true
@@ -96,8 +97,8 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
             this.argumentType = argumentType
         }
 
-        fun listSuggestions(
-            context: CommandContext<ServerCommandSource?>?,
+        open fun listSuggestions(
+            context: CommandContext<ServerCommandSource>,
             builder: SuggestionsBuilder
         ): CompletableFuture<Suggestions> {
             return if (useSuggestionProvider) {
@@ -126,7 +127,7 @@ abstract class AbstractInterdimensionalArgumentType : SuggestionProvider<ServerC
         }
 
         @Throws(CommandSyntaxException::class)
-        fun parse(reader: StringReader): Any {
+        open fun parse(reader: StringReader): Any {
             return if (useSuggestionProvider) {
                 val startPos = reader.cursor
                 try {

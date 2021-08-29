@@ -8,9 +8,9 @@ import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.world.gen.feature.StructureFeature
 import java.util.concurrent.CompletableFuture
 
-object StructureListArgumentType : SuggestionProvider<ServerCommandSource?> {
+object StructureListArgumentType : SuggestionProvider<ServerCommandSource> {
     override fun getSuggestions(
-        context: CommandContext<ServerCommandSource?>,
+        context: CommandContext<ServerCommandSource>,
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         val input = builder.remaining
