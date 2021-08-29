@@ -17,6 +17,7 @@ import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.quiltservertools.interdimensional.command.argument.PortalOptionsArgumentType
 
 object PortalCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
@@ -28,38 +29,46 @@ object PortalCommand : Command {
                         argument(
                             "destination",
                             DimensionArgumentType.dimension()
-                        ).then(
-                            argument("color", ColorArgumentType.color())
-                                .then(
-                                    argument(
-                                        "frame_block",
-                                        BlockStateArgumentType.blockState()
-                                    ).then(
-                                        argument("flat", BoolArgumentType.bool()).executes {
-                                            add(
+                        )
+                            .then(
+                                argument(
+                                    "frame_block",
+                                    BlockStateArgumentType.blockState()
+                                )
+                                    .executes {
+                                        return@executes add(
+                                            it.source,
+                                            StringArgumentType.getString(it, "name"),
+                                            DimensionArgumentType.getDimensionArgument(it, "destination").registryKey.value,
+                                            BlockStateArgumentType.getBlockState(it, "frame_block"),
+                                            ""
+                                        )
+                                    }
+                                    .then(
+                                        argument("options", StringArgumentType.greedyString()).suggests(
+                                            PortalOptionsArgumentType()
+                                        ).executes {
+                                            return@executes add(
                                                 it.source,
                                                 StringArgumentType.getString(it, "name"),
-                                                DimensionArgumentType.getDimensionArgument(
-                                                    it,
-                                                    "destination"
-                                                ).registryKey.value,
-                                                ColorArgumentType.getColor(it, "color"),
+                                                DimensionArgumentType.getDimensionArgument(it, "destination").registryKey.value,
                                                 BlockStateArgumentType.getBlockState(it, "frame_block"),
-                                                BoolArgumentType.getBool(it, "flat")
+                                                StringArgumentType.getString(it, "options")
                                             )
                                         }
                                     )
-                                )
-                        )
+                            )
                     )
-                )
+                ))
+            .then(
+                literal("remove").requires(Permissions.require("interdimensional.command.portal.delete", 4))
+                    .then(argument("name", StringArgumentType.string()).executes {
+                        remove(
+                            it.source,
+                            StringArgumentType.getString(it, "name")
+                        )
+                    })
             )
-            .then(literal("remove").requires(Permissions.require("interdimensional.command.portal.delete", 4)).then(argument("name", StringArgumentType.string()).executes {
-                remove(
-                    it.source,
-                    StringArgumentType.getString(it, "name")
-                )
-            }))
             .build()
     }
 
@@ -67,24 +76,54 @@ object PortalCommand : Command {
         source: ServerCommandSource,
         name: String,
         destination: Identifier,
-        color: Formatting,
         blockState: BlockStateArgument,
-        flat: Boolean
+        properties: String
     ): Int {
-        //TODO add support for custom items
-        val ignitionSource = PortalIgnitionSource.FIRE
-        val red: Int = color.colorIndex shr 16 and 0xFF
-        val green: Int = color.colorIndex shr 8 and 0xFF
-        val blue: Int = color.colorIndex and 0xFF
+        val props = PortalOptionsArgumentType().rawProperties(properties)
+        val flat = props.containsKey("flat") && (props["flat"] as Boolean)
 
-        PortalManager.addPortal(Portal(name, blockState.blockState.block, destination, red.toByte(), green.toByte(), blue.toByte(), flat, ignitionSource))
+        val ignitionSource = PortalIgnitionSource.FIRE
+
+
+        if (props.containsKey("color")) {
+            val color = props["color"] as Formatting
+            val red: Int = color.colorIndex shr 16 and 0xFF
+            val green: Int = color.colorIndex shr 8 and 0xFF
+            val blue: Int = color.colorIndex and 0xFF
+                PortalManager.addPortal(
+                    Portal(
+                        name,
+                        blockState.blockState.block,
+                        destination,
+                        red.toByte(),
+                        green.toByte(),
+                        blue.toByte(),
+                        flat,
+                        ignitionSource
+                    )
+                )
+        } else {
+            PortalManager.addPortal(
+                Portal(
+                    name,
+                    blockState.blockState.block,
+                    destination,
+                    0,
+                    0,
+                    0,
+                    flat,
+                    ignitionSource
+                )
+            )
+        }
+
         source.sendFeedback(success("Created portal to $destination with frame ${blockState.blockState.block}"), false)
 
         return 1
     }
 
     private fun remove(source: ServerCommandSource, name: String): Int {
-        PortalManager.portals.removeIf{ it.name == name }
+        PortalManager.portals.removeIf { it.name == name }
         source.sendFeedback(success("Removed portal $name"), false)
         return 1
     }
