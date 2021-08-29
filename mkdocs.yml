@@ -1,0 +1,8 @@
+site_name: Interdimensional
+
+repo_url: https://github.com/QuiltServerTools/Interdimensional
+repo_name: QuiltServerTools/Ledger
+
+nav:
+  - index.md
+  - Commands/root.md

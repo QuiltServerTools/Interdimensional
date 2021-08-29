@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "net.quiltservertools.interdimensional.portals.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "EntityMixin",
+    "NetherPortalMixin",
+    "PlayerMixin",
+    "ServerPlayerMixin",
+    "portalLighters.AbstractFireMixin",
+    "portalLighters.FluidBlockPlacedMixin",
+    "portalLighters.PotionEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

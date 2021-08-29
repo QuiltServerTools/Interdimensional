@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "interdimensional",
+  "id": "interdimensional-portals-api",
   "version": "${version}",
 
-  "name": "Interdimensional",
-  "description": "A runtime dimensions mod for fabric",
+  "name": "Interdimensional Portals API",
+  "description": "An API for custom server-side portals, used in Interdimensional",
   "authors": [
     "yitzy299"
   ],
@@ -17,25 +17,16 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      {
-        "value": "net.quiltservertools.interdimensional.Interdimensional::INSTANCE"
-      }
+      "net.quiltservertools.interdimensional.portals.InterdimensionalPortals"
     ]
   },
   "mixins": [
-    "interdimensional.mixins.json"
+    "interdimensional-portals-api.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": ">=0.34.9",
-    "minecraft": "1.17.x",
-    "fantasy": "0.4.1+1.17",
-    "fabric-language-kotlin": ">=1.6.0",
-    "interdimensional-portals-api": "*"
-  },
-
-  "breaks": {
-    "cardboard": "*"
+    "minecraft": "1.17.x"
   }
 }
