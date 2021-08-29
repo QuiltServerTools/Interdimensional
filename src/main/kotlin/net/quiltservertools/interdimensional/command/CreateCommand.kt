@@ -1,5 +1,6 @@
 package net.quiltservertools.interdimensional.command
 
+import com.github.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.info
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import net.quiltservertools.interdimensional.command.argument.DimensionOverrideArgumentType
@@ -25,7 +26,8 @@ object CreateCommand : Command {
         return CommandManager.literal("create")
             .requires(Permissions.require("interdimensional.command.create", 3))
             .then(CommandManager.argument("identifier", IdentifierArgumentType.identifier())
-                .then(ServerDimensionArgument.dimension("maplike")
+                .then(
+                    ServerDimensionArgument.dimension("maplike")
                     .executes { ctx: CommandContext<ServerCommandSource> ->
                         run(
                             ServerDimensionArgument.get(ctx, "maplike"),

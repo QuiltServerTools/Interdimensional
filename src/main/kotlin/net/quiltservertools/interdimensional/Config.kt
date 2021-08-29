@@ -1,4 +1,4 @@
-package com.github.quiltservertools.interdimensional
+package net.quiltservertools.interdimensional
 
 import net.quiltservertools.interdimensional.world.PortalManager
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager

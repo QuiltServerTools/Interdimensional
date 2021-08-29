@@ -1,4 +1,4 @@
-package com.github.quiltservertools.interdimensional.command.argument
+package net.quiltservertools.interdimensional.command.argument
 
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.context.CommandContext
@@ -8,6 +8,7 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.server.command.ServerCommandSource
+import net.quiltservertools.interdimensional.command.argument.AbstractInterdimensionalArgumentType
 import java.util.concurrent.CompletableFuture
 
 object ServerDimensionSuggestor :

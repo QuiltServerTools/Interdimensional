@@ -1,5 +1,6 @@
 package net.quiltservertools.interdimensional
 
+import net.quiltservertools.interdimensional.Config
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
