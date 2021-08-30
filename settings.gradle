@@ -15,3 +15,5 @@ pluginManagement {
         id "org.jetbrains.kotlin.jvm" version kotlin_version
     }
 }
+
+include("portals-api")

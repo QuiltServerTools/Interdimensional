@@ -1,11 +1,10 @@
 {
   "required": true,
-  "package": "com.github.quiltservertools.interdimensional.mixin",
+  "package": "net.quiltservertools.interdimensional.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ChunkGeneratorAccessor",
     "MixinChunkGenerator",
-    "MixinCustomPortalsMod",
     "MixinServerPlayerEntity"
   ],
   "injectors": {

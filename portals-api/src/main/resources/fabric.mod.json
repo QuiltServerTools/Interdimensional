@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "interdimensional-portals-api",
+  "version": "${version}",
+
+  "name": "Interdimensional Portals API",
+  "description": "An API for custom server-side portals, used in Interdimensional",
+  "authors": [
+    "yitzy299"
+  ],
+  "contact": {
+    "homepage": "https://github.com/QuiltServerTools/Interdimensional",
+    "sources": "https://github.com/QuiltServerTools/Interdimensional"
+  },
+  "license": "LGPL-3.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.quiltservertools.interdimensional.portals.InterdimensionalPortals",
+      "net.quiltservertools.interdimensional.portals.networking.NetworkManager"
+    ],
+    "client": [
+      "net.quiltservertools.interdimensional.portals.client.InterdimensionalPortalsClient"
+    ]
+  },
+  "mixins": [
+    "interdimensional-portals-api.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": ">=0.34.9",
+    "minecraft": "1.17.x"
+  }
+}

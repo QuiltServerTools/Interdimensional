@@ -1,0 +1,35 @@
+site_name: Interdimensional
+
+repo_url: https://github.com/QuiltServerTools/Interdimensional
+repo_name: QuiltServerTools/Interdimensional
+
+nav:
+  - index.md
+  - Commands:
+      - commands/root.md
+      - commands/create.md
+      - commands/delete.md
+      - commands/portal.md
+      - commands/generator.md
+  - Arguments:
+      - arguments/dimension_override_argument_type.md
+      - arguments/generator_argument_type.md
+      - arguments/portal_options_argument_type.md
+theme:
+  name: material
+  features:
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    primary: cyan
+    scheme: slate
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+plugins:
+  - search
+extra:
+  version:
+    provider: mike

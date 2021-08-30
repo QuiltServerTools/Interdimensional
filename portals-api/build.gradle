@@ -1,0 +1,9 @@
+repositories {
+    maven {
+        url 'https://maven.nucleoid.xyz'
+    }
+}
+
+dependencies {
+    modImplementation include("eu.pb4:polymer:0.1.0-rc.6+1.17.1")
+}
