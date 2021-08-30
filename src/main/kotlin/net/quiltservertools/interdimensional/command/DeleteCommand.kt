@@ -26,7 +26,7 @@ object DeleteCommand : Command {
 
     private fun delete(world: ServerWorld, scs: ServerCommandSource): Int {
         val id = world.registryKey.value
-        remove(getHandle(id)!!)
+        remove(getHandle(id))
         scs.sendFeedback(InterdimensionalCommand.success("Deleted dimension $id"), true)
         return 1
     }

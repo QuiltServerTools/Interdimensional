@@ -57,7 +57,7 @@ object GeneratorCommand : Command {
                 VanillaLayeredBiomeSource(biomeSeed, false, largeBiomes, scs.registryManager.get(Registry.BIOME_KEY))
             scs.sendFeedback(InterdimensionalCommand.info("Set biome source to Vanilla Layered"), false)
         } else if (propertyMap.containsKey("multi_noise")) {
-            MultiNoiseBiomeSource.method_35242(scs.registryManager.get(Registry.BIOME_KEY), biomeSeed)
+            biomeSource = MultiNoiseBiomeSource.method_35242(scs.registryManager.get(Registry.BIOME_KEY), biomeSeed)
             scs.sendFeedback(InterdimensionalCommand.error("This option is not supported yet"), false)
         } else if (propertyMap.containsKey("the_end_biome_source")) {
             biomeSource = TheEndBiomeSource(scs.registryManager.get(Registry.BIOME_KEY), biomeSeed)
