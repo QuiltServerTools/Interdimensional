@@ -11,6 +11,11 @@
     "portalLighters.FluidBlockPlacedMixin",
     "portalLighters.PotionEntityMixin"
   ],
+  "client": [
+    "client.ClientPlayerMixin",
+    "client.ClientWorldMixin",
+    "client.InGameHudMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

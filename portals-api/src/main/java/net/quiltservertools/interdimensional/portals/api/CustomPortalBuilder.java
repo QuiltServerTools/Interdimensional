@@ -1,7 +1,6 @@
 package net.quiltservertools.interdimensional.portals.api;
 
 import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry;
-import net.quiltservertools.interdimensional.portals.OldPortalBlock;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.PortalBlock;
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;

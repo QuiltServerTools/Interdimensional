@@ -1,6 +1,5 @@
 package net.quiltservertools.interdimensional
 
-import net.quiltservertools.interdimensional.Config
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
@@ -48,7 +47,7 @@ object Interdimensional : ModInitializer {
         root.addChild(CreateCommand.register())
         root.addChild(DeleteCommand.register())
         root.addChild(GeneratorCommand.register())
-        // fixme root.addChild(PortalCommand.register())
+        root.addChild(PortalCommand.register())
     }
 
     private fun serverStopping() {

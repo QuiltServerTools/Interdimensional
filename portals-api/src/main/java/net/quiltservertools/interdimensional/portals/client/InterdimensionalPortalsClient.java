@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
+import net.minecraft.block.Blocks;
 import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.PerWorldPortals;
@@ -23,12 +24,11 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
-public class CustomPortalsModClient implements ClientModInitializer {
-    public static final ParticleType<BlockStateParticleEffect> CUSTOMPORTALPARTICLE = Registry.register(Registry.PARTICLE_TYPE, InterdimensionalPortals.MOD_ID + ":customportalparticle", FabricParticleTypes.complex(BlockStateParticleEffect.PARAMETERS_FACTORY));
+public class InterdimensionalPortalsClient implements ClientModInitializer {
+    public static final ParticleType<BlockStateParticleEffect> CUSTOMPORTALPARTICLE = Registry.register(Registry.PARTICLE_TYPE, InterdimensionalPortals.MOD_ID + ":portal-particle", FabricParticleTypes.complex(BlockStateParticleEffect.PARAMETERS_FACTORY));
 
     @Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlock(InterdimensionalPortals.portalBlock, RenderLayer.getTranslucent());
         ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> {
             if (world != null && pos != null) {
                 Block block = InterdimensionalPortals.getPortalBase(world, pos);
@@ -36,7 +36,7 @@ public class CustomPortalsModClient implements ClientModInitializer {
                 if (link != null) return link.colorID;
             }
             return 1908001;
-        }, InterdimensionalPortals.portalBlock);
+        }, Blocks.NETHER_PORTAL);
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
 
         PortalRegistrySync.registerReceivePortalData();

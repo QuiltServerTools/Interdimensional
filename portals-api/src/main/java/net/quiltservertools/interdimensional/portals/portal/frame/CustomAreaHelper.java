@@ -55,9 +55,7 @@ public class CustomAreaHelper extends PortalFrameTester {
     }
 
     public Optional<PortalFrameTester> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
-        return getOrEmpty(worldAccess, blockPos, (customAreaHelper) -> {
-            return customAreaHelper.isValid() && customAreaHelper.foundPortalBlocks == 0;
-        }, axis, foundations);
+        return getOrEmpty(worldAccess, blockPos, (customAreaHelper) -> customAreaHelper.isValid() && customAreaHelper.foundPortalBlocks == 0, axis, foundations);
     }
 
     public Optional<PortalFrameTester> getOrEmpty(WorldAccess worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations) {

@@ -130,8 +130,8 @@ public class InterdimensionalPortals implements ModInitializer {
     }
 
     public static BlockState blockWithAxis(BlockState state, Direction.Axis axis) {
-        if (state.getBlock() instanceof NetherPortalBlock)
-            return state.with(NetherPortalBlock.AXIS, axis);
+        if (state.getBlock() instanceof PortalBlock)
+            return state.with(PortalBlock.AXIS, axis);
         return state;
     }
 

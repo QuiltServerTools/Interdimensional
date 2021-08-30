@@ -24,7 +24,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
         })
         json.addProperty("version", configVersion)
         json.add("worlds", worlds)
-        // fixme json.add("portals", PortalManager.toJson())
+        json.add("portals", PortalManager.toJson())
         val gson = GsonBuilder().setPrettyPrinting().create()
         try {
             Files.write(path, gson.toJson(json).toByteArray())

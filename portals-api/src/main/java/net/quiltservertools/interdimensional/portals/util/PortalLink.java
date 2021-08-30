@@ -1,14 +1,11 @@
 package net.quiltservertools.interdimensional.portals.util;
 
 import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry;
-import net.quiltservertools.interdimensional.portals.OldPortalBlock;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.PortalBlock;
-import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;
 import net.quiltservertools.interdimensional.portals.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
