@@ -36,6 +36,7 @@
   },
 
   "breaks": {
-    "cardboard": "*"
+    "cardboard": "*",
+    "multiworld": "*"
   }
 }

@@ -17,11 +17,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.quiltservertools.interdimensional.portals.InterdimensionalPortals",
-      "net.quiltservertools.interdimensional.portals.networking.NetworkManager"
-    ],
-    "client": [
-      "net.quiltservertools.interdimensional.portals.client.InterdimensionalPortalsClient"
+      "net.quiltservertools.interdimensional.portals.InterdimensionalPortals"
     ]
   },
   "mixins": [

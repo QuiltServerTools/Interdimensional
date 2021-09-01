@@ -7,9 +7,7 @@
     "NetherPortalMixin",
     "PlayerMixin",
     "ServerPlayerMixin",
-    "portalLighters.AbstractFireMixin",
-    "portalLighters.FluidBlockPlacedMixin",
-    "portalLighters.PotionEntityMixin"
+    "portalLighters.AbstractFireMixin"
   ],
   "client": [
     "client.ClientPlayerMixin",

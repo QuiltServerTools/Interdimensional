@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(FluidBlock.class)
 public abstract class FluidBlockPlacedMixin {
 
+    // Broken in prod
+
     @Inject(method = "onBlockAdded", at = @At("HEAD"))
     public void fluidPlacedAttemptPortalLight(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         if (state.getFluidState().isStill())
