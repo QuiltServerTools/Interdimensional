@@ -10,4 +10,4 @@ This argument takes a series of properties in the format below:
 
 `color`: Formatting - Color of the portal for when a compatible client mod is used
 
-`flat`: Boolean - Whether the portal is horizontal or not
+`source_world`: Identifier - the world that the portal is initially lit from. Defaults to overworld
