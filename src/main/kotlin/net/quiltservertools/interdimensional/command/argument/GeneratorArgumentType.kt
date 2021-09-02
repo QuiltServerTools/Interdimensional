@@ -15,8 +15,8 @@ class GeneratorArgumentType : AbstractInterdimensionalArgumentType() {
         criteriumSuggestors["single_biome"] =
             Suggestor(IdentifierArgumentType.identifier(), SuggestionProviders.ALL_BIOMES)
         criteriumSuggestors["vanilla_layered"] = Suggestor(BoolArgumentType.bool())
-        //TODO make multinoise biome list
-        criteriumSuggestors["multi_noise"] = Suggestor(BoolArgumentType.bool())
+
+        criteriumSuggestors["multi_noise"] = Suggestor(ServerDimensionArgument.dimension("noise_like").type)
         criteriumSuggestors["the_end_biome_source"] = Suggestor(BoolArgumentType.bool())
 
         //Options

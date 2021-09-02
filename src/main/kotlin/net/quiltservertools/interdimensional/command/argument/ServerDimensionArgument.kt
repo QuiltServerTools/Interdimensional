@@ -1,8 +1,7 @@
-package com.github.quiltservertools.interdimensional.command.argument
+package net.quiltservertools.interdimensional.command.argument
 
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.minecraft.command.CommandSource
 import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
@@ -10,8 +9,6 @@ import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
-import net.minecraft.world.dimension.DimensionOptions
-import net.minecraft.world.gen.GeneratorOptions
 
 
 object ServerDimensionArgument {

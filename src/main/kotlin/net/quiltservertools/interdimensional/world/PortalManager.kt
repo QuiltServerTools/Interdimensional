@@ -21,6 +21,11 @@ object PortalManager {
             val g = jsonObject.get("g").asByte
             val b = jsonObject.get("b").asByte
             val flat = jsonObject.get("horizontal").asBoolean
+            val sourceWorld = if (!jsonObject.has("source_world")) {
+                Identifier("minecraft", "overworld")
+            } else {
+                Identifier(jsonObject.get("source_world").asString)
+            }
 
             // Source parsing
             val sourceObject = jsonObject.get("source").asJsonObject
@@ -35,7 +40,7 @@ object PortalManager {
                 PortalIgnitionSource.FIRE
             }
 
-            val portal = Portal(name, frameBlock, destination, r, g, b, flat, ignitionSource)
+            val portal = Portal(name, frameBlock, destination, sourceWorld, r, g, b, flat, ignitionSource)
             addPortal(portal)
         }
     }
@@ -51,6 +56,7 @@ object PortalManager {
             jsonObject.addProperty("g", portal.g)
             jsonObject.addProperty("b", portal.b)
             jsonObject.addProperty("horizontal", portal.horizontal)
+            jsonObject.addProperty("source_world", portal.sourceWorld.toString())
 
             val sourceObject = JsonObject()
 
@@ -77,11 +83,15 @@ object PortalManager {
 
     fun addPortal(portal: Portal) {
         val builder = CustomPortalBuilder.beginPortal()
+
         builder.frameBlock(portal.frameBlock)
         builder.ignitionSource(portal.source)
+        builder.returnDim(portal.sourceWorld, true)
         if (portal.horizontal) builder.flatPortal()
         builder.tintColor(portal.r.toInt(), portal.g.toInt(), portal.b.toInt())
         builder.destDimID(portal.destination)
+
+
         builder.registerPortal()
         portals.add(portal)
     }

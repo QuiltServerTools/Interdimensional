@@ -15,6 +15,7 @@ import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.server.command.CommandManager.argument
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.quiltservertools.interdimensional.command.argument.PortalOptionsArgumentType
@@ -85,6 +86,12 @@ object PortalCommand : Command {
         val ignitionSource = PortalIgnitionSource.FIRE
 
 
+        val sourceWorld = if (props.containsKey("source_world")) {
+            props["source_world"] as Identifier
+        } else {
+            source.server.overworld.registryKey.value
+        }
+
         if (props.containsKey("color")) {
             val color = props["color"] as Formatting
             val red: Int = color.colorIndex shr 16 and 0xFF
@@ -95,6 +102,7 @@ object PortalCommand : Command {
                         name,
                         blockState.blockState.block,
                         destination,
+                        sourceWorld,
                         red.toByte(),
                         green.toByte(),
                         blue.toByte(),
@@ -108,6 +116,7 @@ object PortalCommand : Command {
                     name,
                     blockState.blockState.block,
                     destination,
+                    sourceWorld,
                     0,
                     0,
                     0,
@@ -117,7 +126,7 @@ object PortalCommand : Command {
             )
         }
 
-        source.sendFeedback(success("Created portal to $destination with frame ${blockState.blockState.block}"), false)
+        source.sendFeedback(success("Created portal from $sourceWorld to $destination with frame ${blockState.blockState.block}"), false)
 
         return 1
     }

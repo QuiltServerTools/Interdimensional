@@ -1,6 +1,6 @@
 package net.quiltservertools.interdimensional.command
 
-import com.github.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
+import net.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.info
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import net.quiltservertools.interdimensional.command.argument.DimensionOverrideArgumentType
@@ -10,7 +10,6 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
-import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
