@@ -1,10 +1,7 @@
 package net.quiltservertools.interdimensional.portals;
 
 import eu.pb4.polymer.block.VirtualBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
@@ -25,6 +22,11 @@ public class PortalBlock extends Block implements VirtualBlock {
     @Override
     public Block getVirtualBlock() {
         return Blocks.NETHER_PORTAL;
+    }
+
+    @Override
+    public BlockState getVirtualBlockState(BlockState state) {
+        return Blocks.NETHER_PORTAL.getDefaultState().with(NetherPortalBlock.AXIS, state.get(PortalBlock.AXIS));
     }
 
     @Override

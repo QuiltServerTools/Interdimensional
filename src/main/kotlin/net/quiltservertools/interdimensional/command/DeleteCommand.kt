@@ -1,23 +1,23 @@
 package net.quiltservertools.interdimensional.command
 
-import net.quiltservertools.interdimensional.world.RuntimeWorldManager.getHandle
-import net.quiltservertools.interdimensional.world.RuntimeWorldManager.remove
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
-import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.world.ServerWorld
+import net.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
+import net.quiltservertools.interdimensional.world.RuntimeWorldManager.getHandle
+import net.quiltservertools.interdimensional.world.RuntimeWorldManager.remove
 
 object DeleteCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
         return CommandManager.literal("delete")
-            .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+            .then(ServerDimensionArgument.dimension("dimension")
                 .requires(Permissions.require("interdimensional.commands.delete", 4))
                 .executes { ctx: CommandContext<ServerCommandSource> ->
                     delete(
-                        DimensionArgumentType.getDimensionArgument(ctx, "dimension"),
+                        ServerDimensionArgument.get(ctx, "dimension"),
                         ctx.source
                     )
                 })

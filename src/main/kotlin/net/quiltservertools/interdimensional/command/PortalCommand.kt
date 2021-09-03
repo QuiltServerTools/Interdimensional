@@ -1,24 +1,21 @@
 package net.quiltservertools.interdimensional.command
 
-import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
-import net.quiltservertools.interdimensional.world.Portal
-import net.quiltservertools.interdimensional.world.PortalManager
-import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
-import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource
 import net.minecraft.command.argument.BlockStateArgument
 import net.minecraft.command.argument.BlockStateArgumentType
-import net.minecraft.command.argument.ColorArgumentType
-import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.server.command.CommandManager.argument
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import net.quiltservertools.interdimensional.command.argument.PortalOptionsArgumentType
+import net.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
+import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource
+import net.quiltservertools.interdimensional.world.Portal
+import net.quiltservertools.interdimensional.world.PortalManager
 
 object PortalCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
@@ -27,10 +24,7 @@ object PortalCommand : Command {
             .then(
                 literal("add").then(
                     argument("name", StringArgumentType.string()).then(
-                        argument(
-                            "destination",
-                            DimensionArgumentType.dimension()
-                        )
+                        ServerDimensionArgument.dimension("dimension")
                             .then(
                                 argument(
                                     "frame_block",
@@ -40,7 +34,7 @@ object PortalCommand : Command {
                                         return@executes add(
                                             it.source,
                                             StringArgumentType.getString(it, "name"),
-                                            DimensionArgumentType.getDimensionArgument(it, "destination").registryKey.value,
+                                            ServerDimensionArgument.get(it, "destination").registryKey.value,
                                             BlockStateArgumentType.getBlockState(it, "frame_block"),
                                             ""
                                         )
@@ -52,7 +46,7 @@ object PortalCommand : Command {
                                             return@executes add(
                                                 it.source,
                                                 StringArgumentType.getString(it, "name"),
-                                                DimensionArgumentType.getDimensionArgument(it, "destination").registryKey.value,
+                                                ServerDimensionArgument.get(it, "destination").registryKey.value,
                                                 BlockStateArgumentType.getBlockState(it, "frame_block"),
                                                 StringArgumentType.getString(it, "options")
                                             )
