@@ -24,7 +24,7 @@ object PortalCommand : Command {
             .then(
                 literal("add").then(
                     argument("name", StringArgumentType.string()).then(
-                        ServerDimensionArgument.dimension("dimension")
+                        ServerDimensionArgument.dimension("destination")
                             .then(
                                 argument(
                                     "frame_block",
