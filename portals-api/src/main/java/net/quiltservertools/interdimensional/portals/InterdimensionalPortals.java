@@ -101,7 +101,7 @@ public class InterdimensionalPortals implements ModInitializer {
             if (!InterdimensionalPortals.isInstanceOfCustomPortal(world, moveTowardsFrame(pos, axis, true)))
                 return world.getBlockState(moveTowardsFrame(pos, axis, true)).getBlock();
 
-            if (axis == Direction.Axis.Y) axis = Direction.Axis.Z;
+            if (axis == Direction.Axis.Y) axis = Direction.Axis.X;
 
             if (!InterdimensionalPortals.isInstanceOfCustomPortal(world, pos.offset(axis, 1)))
                 return world.getBlockState(pos.offset(axis, 1)).getBlock();

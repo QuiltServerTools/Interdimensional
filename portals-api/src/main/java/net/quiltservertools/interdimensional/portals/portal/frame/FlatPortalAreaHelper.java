@@ -107,7 +107,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     public void createPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
-        BlockState blockState = InterdimensionalPortals.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : InterdimensionalPortals.getDefaultPortalBlock().getDefaultState(), Direction.Axis.Y);
+        BlockState blockState = InterdimensionalPortals.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : InterdimensionalPortals.getDefaultPortalBlock().getDefaultState(), Direction.Axis.X);
         BlockPos.iterate(this.lowerCorner, this.lowerCorner.offset(Direction.SOUTH, this.xSize - 1).offset(Direction.EAST, this.zSize - 1)).forEach((blockPos) -> {
             this.world.setBlockState(blockPos, blockState, 18);
         });

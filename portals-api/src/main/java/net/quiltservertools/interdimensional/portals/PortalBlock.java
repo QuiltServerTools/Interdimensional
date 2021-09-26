@@ -37,7 +37,6 @@ public class PortalBlock extends Block implements VirtualBlock {
     public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     protected static final VoxelShape X_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
     protected static final VoxelShape Z_SHAPE = Block.createCuboidShape(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
-    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 10.0D, 16.0D);
 
     public PortalBlock(Settings settings) {
         super(settings);
@@ -48,7 +47,6 @@ public class PortalBlock extends Block implements VirtualBlock {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(AXIS)) {
             case Z -> Z_SHAPE;
-            case Y -> Y_SHAPE;
             default -> X_SHAPE;
         };
     }
