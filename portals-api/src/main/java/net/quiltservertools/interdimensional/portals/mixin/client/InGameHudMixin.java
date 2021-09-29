@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
+import net.quiltservertools.interdimensional.portals.client.ClientManager;
 import net.quiltservertools.interdimensional.portals.interfaces.ClientPlayerInColoredPortal;
 import net.quiltservertools.interdimensional.portals.util.ColorUtil;
 import net.minecraft.block.BlockState;
@@ -38,9 +39,6 @@ public class InGameHudMixin {
 
     @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;getSprite(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/texture/Sprite;"))
     public Sprite renderCustomPortalOverlay(BlockModels blockModels, BlockState blockState) {
-        if (((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor() >= 0) {
-            return this.client.getBlockRenderManager().getModels().getSprite(InterdimensionalPortals.portalBlock.getDefaultState());
-        }
         return this.client.getBlockRenderManager().getModels().getSprite(Blocks.NETHER_PORTAL.getDefaultState());
     }
 }
