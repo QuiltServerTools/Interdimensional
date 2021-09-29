@@ -7,6 +7,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -14,6 +15,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.quiltservertools.interdimensional.portals.interfaces.EntityInCustomPortal;
+import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
 import net.quiltservertools.interdimensional.portals.portal.frame.PortalFrameTester;
 import net.quiltservertools.interdimensional.portals.util.CustomTeleporter;
 import net.quiltservertools.interdimensional.portals.util.PortalLink;
@@ -31,6 +33,10 @@ public class PortalBlock extends Block implements VirtualBlock {
 
     @Override
     public void sendPacketsAfterCreation(ServerPlayerEntity player, BlockPos pos, BlockState blockState) {
+        var portal = CustomPortalApiRegistry.getPortalLinkFromBase(InterdimensionalPortals.getPortalBase(player.world, pos));
+        if (portal != null) {
+            NetworkManager.sendPortalInfo(player, pos, portal.colorID);
+        }
         VirtualBlock.super.sendPacketsAfterCreation(player, pos, blockState);
     }
 
@@ -45,10 +51,10 @@ public class PortalBlock extends Block implements VirtualBlock {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(AXIS)) {
-            case Z -> Z_SHAPE;
-            default -> X_SHAPE;
-        };
+        if (state.get(AXIS).equals(Direction.Axis.X)) {
+            return X_SHAPE;
+        }
+        return Z_SHAPE;
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {

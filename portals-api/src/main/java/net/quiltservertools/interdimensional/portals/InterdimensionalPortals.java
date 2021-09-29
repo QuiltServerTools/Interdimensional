@@ -29,7 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import java.util.HashMap;
 
 public class InterdimensionalPortals implements ModInitializer {
-    public static final String MOD_ID = "interdimensional-portals";
+    public static final String MOD_ID = "interdimensional-portals-api";
     public static PortalBlock portalBlock;
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
     public static Identifier VANILLA_NETHERPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
@@ -66,7 +66,6 @@ public class InterdimensionalPortals implements ModInitializer {
             }
             return TypedActionResult.pass(stack);
         }));
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_end")).lightWithWater().tintColor(46, 5, 25).registerPortal();
     }
 
     public static void logError(String message) {

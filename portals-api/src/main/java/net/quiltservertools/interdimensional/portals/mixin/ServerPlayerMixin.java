@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
+import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,6 +21,7 @@ public abstract class ServerPlayerMixin implements EntityInCustomPortal {
 
     @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getRegistryKey()Lnet/minecraft/util/registry/RegistryKey;", ordinal = 0))
     public RegistryKey<World> CPApreventEndCredits(ServerWorld serverWorld) {
+        NetworkManager.clearPortals((ServerPlayerEntity) (Object) this);
         if (this.didTeleport())
             return RegistryKey.of(Registry.WORLD_KEY, new Identifier(InterdimensionalPortals.MOD_ID, "nullworld"));
         return serverWorld.getRegistryKey();
