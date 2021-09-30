@@ -11,7 +11,8 @@
   ],
   "client": [
     "client.ClientPlayerMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.ClientWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

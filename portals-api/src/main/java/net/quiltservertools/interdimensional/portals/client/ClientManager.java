@@ -24,7 +24,7 @@ public class ClientManager {
         positions.put(pos, color);
     }
 
-    private void clear() {
+    public void clear() {
         positions.clear();
     }
 
@@ -41,7 +41,5 @@ public class ClientManager {
             var color = buf.readInt();
             addBlock(pos, color);
         }));
-
-        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.CLEAR_PORTALS, ((client, handler, buf, responseSender) -> clear()));
     }
 }
