@@ -123,7 +123,7 @@ public class InterdimensionalPortals implements ModInitializer {
     }
 
     public static Direction.Axis getAxisFrom(BlockState state) {
-        if (state.getBlock() instanceof NetherPortalBlock)
+        if (state.getBlock() instanceof PortalBlock)
             return state.get(NetherPortalBlock.AXIS);
         if (state.getBlock() instanceof EndPortalBlock)
             return Direction.Axis.Y;

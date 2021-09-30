@@ -14,4 +14,10 @@ public interface EntityInCustomPortal {
     void setDidTP(boolean didTP);
 
     void increaseCooldown();
+
+    default int getCooldownTime() {
+        return 0;
+    }
+
+    void resetCooldown();
 }

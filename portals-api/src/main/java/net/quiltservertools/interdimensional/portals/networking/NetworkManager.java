@@ -9,7 +9,6 @@ import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 
 public class NetworkManager {
     public static final Identifier SYNC_PORTALS = new Identifier(InterdimensionalPortals.MOD_ID, "syncportals");
-    public static final Identifier CLEAR_PORTALS = new Identifier(InterdimensionalPortals.MOD_ID, "clearportals");
 
     public static boolean isVanilla(ServerPlayerEntity player) {
         return !ServerPlayNetworking.canSend(player, SYNC_PORTALS);
@@ -21,10 +20,5 @@ public class NetworkManager {
         buf.writeBlockPos(pos);
         buf.writeInt(color);
         ServerPlayNetworking.send(player, SYNC_PORTALS, buf);
-    }
-
-    public static void clearPortals(ServerPlayerEntity player) {
-        if (isVanilla(player)) return;
-        ServerPlayNetworking.send(player, CLEAR_PORTALS, PacketByteBufs.empty());
     }
 }

@@ -21,7 +21,6 @@ public abstract class ServerPlayerMixin implements EntityInCustomPortal {
 
     @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getRegistryKey()Lnet/minecraft/util/registry/RegistryKey;", ordinal = 0))
     public RegistryKey<World> CPApreventEndCredits(ServerWorld serverWorld) {
-        NetworkManager.clearPortals((ServerPlayerEntity) (Object) this);
         if (this.didTeleport())
             return RegistryKey.of(Registry.WORLD_KEY, new Identifier(InterdimensionalPortals.MOD_ID, "nullworld"));
         return serverWorld.getRegistryKey();
