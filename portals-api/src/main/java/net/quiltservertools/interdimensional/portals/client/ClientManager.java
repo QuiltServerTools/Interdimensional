@@ -32,10 +32,7 @@ public class ClientManager {
         if (positions.containsKey(pos)) {
             return positions.get(pos);
         }
-        //FIXME
-        // I stole this colour from the previous portal API code
-        // It doesn't seem quite right and I have no clue how to obtain the right one
-        return 1908001;
+        return -1;
     }
 
     public ClientManager() {

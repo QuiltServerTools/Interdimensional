@@ -1,5 +1,6 @@
 package net.quiltservertools.interdimensional.portals;
 
+import net.minecraft.block.BlockState;
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;
 import net.quiltservertools.interdimensional.portals.portal.frame.PortalFrameTester;
 import net.quiltservertools.interdimensional.portals.util.ColorUtil;
@@ -29,10 +30,6 @@ public class CustomPortalApiRegistry {
         return portals.values();
     }
 
-    public static int getColorFromRGB(int r, int g, int b) {
-        return ColorUtil.getColorFromRGB(r, g, b);
-    }
-
 
     public static void registerPortalFrameTester(Identifier frameTesterID, PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester) {
         PortalFrameTesters.put(frameTesterID, createPortalFrameTester);
@@ -58,79 +55,7 @@ public class CustomPortalApiRegistry {
             portals.put(frameBlock, link);
         }
     }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, Identifier dimID, int portalColor) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
-        addPortal(frameBlock, link);
-    }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int portalColor) {
-        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
-        link.portalIgnitionSource = pis;
-        addPortal(frameBlock, link);
-    }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, Block ignitionBlock, PortalBlock portalBlock, Identifier dimID, int portalTint) {
-        PortalIgnitionSource ignitionSource = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalTint);
-        link.portalIgnitionSource = ignitionSource;
-        link.setPortalBlock(portalBlock);
-        addPortal(frameBlock, link);
-    }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, Identifier dimID, int r, int g, int b) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
-        addPortal(frameBlock, link);
-    }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, Identifier dimID, int r, int g, int b) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
-        link.portalIgnitionSource = ignitionSource;
-        addPortal(frameBlock, link);
-    }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, PortalBlock portalBlock, Identifier dimID, int r, int g, int b) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
-        link.portalIgnitionSource = ignitionSource;
-        link.setPortalBlock(portalBlock);
-        addPortal(frameBlock, link);
-    }
-
-    /**
-     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder} instead for more flexibility
-     */
-    @Deprecated
-    public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, PortalBlock portalBlock, Identifier dimID, int forcePortalWidth, int forcePortalHeight, int r, int g, int b) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
-        link.portalIgnitionSource = ignitionSource;
-        link.setPortalBlock(portalBlock);
-        link.forcedWidth = forcePortalWidth;
-        link.forcedHeight = forcePortalHeight;
-        addPortal(frameBlock, link);
+    public static boolean isRegisteredFrameBlock(BlockState state) {
+        return portals.containsKey(state.getBlock());
     }
 }

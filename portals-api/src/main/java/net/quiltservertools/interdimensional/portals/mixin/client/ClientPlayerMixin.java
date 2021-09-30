@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
+import net.quiltservertools.interdimensional.portals.client.ClientManager;
 import net.quiltservertools.interdimensional.portals.interfaces.ClientPlayerInColoredPortal;
 import net.quiltservertools.interdimensional.portals.interfaces.EntityInCustomPortal;
 import net.quiltservertools.interdimensional.portals.util.PortalLink;
@@ -65,8 +66,7 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
         if (this.inNetherPortal) {
             setLastUsedPortalColor(-1);
         } else if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
-            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(InterdimensionalPortals.getPortalBase(this.world, this.getBlockPos()));
-            setLastUsedPortalColor(link != null ? link.colorID : 1908001);
+            setLastUsedPortalColor(ClientManager.getInstance().getColorAtPosition(this.getBlockPos()));
             updateCustomNausea();
             ci.cancel();
         }
