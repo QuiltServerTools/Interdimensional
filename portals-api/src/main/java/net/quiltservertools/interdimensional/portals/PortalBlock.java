@@ -7,7 +7,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -20,6 +19,7 @@ import net.quiltservertools.interdimensional.portals.portal.frame.PortalFrameTes
 import net.quiltservertools.interdimensional.portals.util.CustomTeleporter;
 import net.quiltservertools.interdimensional.portals.util.PortalLink;
 
+@SuppressWarnings("deprecation")
 public class PortalBlock extends Block implements VirtualBlock {
     @Override
     public Block getVirtualBlock() {
@@ -58,7 +58,7 @@ public class PortalBlock extends Block implements VirtualBlock {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        Block block = getPortalBase(world, pos);
+        Block block = getPortalBase((World) world, pos);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, InterdimensionalPortals.getAxisFrom(state), block);
