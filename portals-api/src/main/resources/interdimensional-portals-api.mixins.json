@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "EntityMixin",
-    "NetherPortalMixin",
     "PlayerMixin",
     "ServerPlayerMixin",
     "portalLighters.AbstractFireMixin"
@@ -12,7 +11,8 @@
   "client": [
     "client.ClientPlayerMixin",
     "client.InGameHudMixin",
-    "client.ClientWorldMixin"
+    "client.ClientWorldMixin",
+    "client.NetherPortalMixin"
   ],
   "injectors": {
     "defaultRequire": 1

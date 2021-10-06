@@ -29,6 +29,7 @@ public class InGameHudMixin {
 
     @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", remap = false))
     public void changeColor(float red, float green, float blue, float alpha) {
+        System.out.println(((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor());
         int color = ((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor();
         if (color >= 0) {
             float[] colors = ColorUtil.getColorForBlock(color);

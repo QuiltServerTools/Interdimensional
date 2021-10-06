@@ -76,14 +76,16 @@ public class PortalBlock extends Block implements VirtualBlock {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
-        entityInPortal.increaseCooldown();
-        if (!entityInPortal.didTeleport()) {
-            entityInPortal.setInPortal(true);
-            if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
-                entityInPortal.setDidTP(true);
-                if (!world.isClient)
-                    CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+        if (!entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
+            EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
+            entityInPortal.increaseCooldown();
+            if (!entityInPortal.didTeleport()) {
+                entityInPortal.setInPortal(true);
+                if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
+                    entityInPortal.setDidTP(true);
+                    if (!world.isClient)
+                        CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+                }
             }
         }
     }

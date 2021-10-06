@@ -20,7 +20,7 @@ public class InterdimensionalPortalsClient implements ClientModInitializer {
     public void onInitializeClient() {
         ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> ClientManager.getInstance().getColorAtPosition(pos),
                 Blocks.NETHER_PORTAL);
-        ClientManager.init();
+        ClientManager.getInstance().register();
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
     }
 }

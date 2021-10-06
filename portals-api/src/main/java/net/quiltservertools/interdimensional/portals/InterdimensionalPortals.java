@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder;
+import net.quiltservertools.interdimensional.portals.client.ClientManager;
 import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;
 import net.quiltservertools.interdimensional.portals.portal.PortalPlacer;
@@ -74,7 +75,7 @@ public class InterdimensionalPortals implements ModInitializer {
 
 
     public static boolean isInstanceOfCustomPortal(BlockView world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() instanceof PortalBlock;
+        return world.getBlockState(pos).getBlock() instanceof PortalBlock || ClientManager.getInstance().getColorAtPosition(pos) != -1;
     }
 
     public static boolean isInstanceOfCustomPortal(BlockState state) {
@@ -116,7 +117,6 @@ public class InterdimensionalPortals implements ModInitializer {
         if (portalAxis.isHorizontal())
             return pos.offset(positiveMove ? Direction.UP : Direction.DOWN);
         if (portalAxis.equals(Direction.Axis.Z)) {
-            System.out.println("yes");
             return pos.offset(positiveMove ? Direction.SOUTH : Direction.NORTH);
         }
         return pos.offset(positiveMove ? Direction.EAST : Direction.WEST);

@@ -8,14 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientManager {
-    private static ClientManager instance;
+    private static final ClientManager instance = new ClientManager();
 
     public static ClientManager getInstance() {
         return instance;
-    }
-
-    public static void init() {
-        instance = new ClientManager();
     }
 
     private final Map<BlockPos, Integer> positions = new HashMap<>();
@@ -35,7 +31,11 @@ public class ClientManager {
         return -1;
     }
 
-    public ClientManager() {
+    public boolean contains(BlockPos pos) {
+        return positions.containsKey(pos);
+    }
+
+    public void register() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.SYNC_PORTALS, ((client, handler, buf, responseSender) -> {
             var pos = buf.readBlockPos();
             var color = buf.readInt();
