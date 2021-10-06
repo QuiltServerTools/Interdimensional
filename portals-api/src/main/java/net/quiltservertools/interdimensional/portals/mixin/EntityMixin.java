@@ -1,5 +1,7 @@
 package net.quiltservertools.interdimensional.portals.mixin;
 
+import net.minecraft.util.math.BlockPos;
+import net.quiltservertools.interdimensional.portals.client.ClientManager;
 import net.quiltservertools.interdimensional.portals.interfaces.CustomTeleportingEntity;
 import net.quiltservertools.interdimensional.portals.interfaces.EntityInCustomPortal;
 import net.minecraft.entity.Entity;

@@ -27,7 +27,6 @@ public abstract class PlayerMixin extends Entity implements EntityInCustomPortal
         this.inPortal = inPortal;
     }
 
-
     @Unique
     @Override
     public int getTimeInPortal() {
