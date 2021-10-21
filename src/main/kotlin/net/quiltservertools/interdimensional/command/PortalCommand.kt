@@ -14,6 +14,7 @@ import net.quiltservertools.interdimensional.command.InterdimensionalCommand.suc
 import net.quiltservertools.interdimensional.command.argument.PortalOptionsArgumentType
 import net.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource
+import net.quiltservertools.interdimensional.portals.util.ColorUtil
 import net.quiltservertools.interdimensional.world.Portal
 import net.quiltservertools.interdimensional.world.PortalManager
 
@@ -88,18 +89,16 @@ object PortalCommand : Command {
 
         if (props.containsKey("color")) {
             val color = props["color"] as Formatting
-            val red: Int = color.colorIndex shr 16 and 0xFF
-            val green: Int = color.colorIndex shr 8 and 0xFF
-            val blue: Int = color.colorIndex and 0xFF
+            val rgb: FloatArray = ColorUtil.getColorForBlock(color.colorValue?: 0)
                 PortalManager.addPortal(
                     Portal(
                         name,
                         blockState.blockState.block,
                         destination,
                         sourceWorld,
-                        red.toByte(),
-                        green.toByte(),
-                        blue.toByte(),
+                        (rgb[0] * 255).toInt().toByte(),
+                        (rgb[1] * 255).toInt().toByte(),
+                        (rgb[2] * 255).toInt().toByte(),
                         flat,
                         ignitionSource
                     )
