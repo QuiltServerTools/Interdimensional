@@ -18,7 +18,15 @@ public class InterdimensionalPortalsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> ClientManager.getInstance().getColorAtPosition(pos),
+        ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> {
+                    int color = ClientManager.getInstance().getColorAtPosition(pos);
+                    if (color < 0) {
+                        // fixme tint color wrong for vanilla portals
+                        // Because we can't completely remove the purple tint from vanilla without making the texture monochrome, we need to make sure vanilla portals render the same
+                        return 1908001;
+                    }
+                    return color;
+                },
                 Blocks.NETHER_PORTAL);
         ClientManager.getInstance().register();
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
