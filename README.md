@@ -10,7 +10,7 @@ Interdimensional requires Fabric API and Fabric Language Kotlin. Simply place th
 
 ### Commands
 
-More information can be found on the [Interdimensional Wiki](https://github.com/QuiltServerTools/Interdimensional/wiki)
+More information can be found on the [Interdimensional Wiki](https://quiltservertools.github.io/Interdimensional)
 
 #### Permissions
 
