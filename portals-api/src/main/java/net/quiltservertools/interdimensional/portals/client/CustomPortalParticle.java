@@ -34,7 +34,6 @@ public class CustomPortalParticle extends PortalParticle {
             var intColor = ClientManager.getInstance().getColorAtPosition(pos);
 
             if (intColor >= 0) {
-                System.out.println(portalParticle.colorAlpha);
                 float[] rgb = ColorUtil.getColorForBlock(intColor);
                 portalParticle.setColor(rgb[0], rgb[1], rgb[2]);
             }

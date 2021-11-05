@@ -75,7 +75,7 @@ public class InterdimensionalPortals implements ModInitializer {
 
 
     public static boolean isInstanceOfCustomPortal(BlockView world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() instanceof PortalBlock || ClientManager.getInstance().getColorAtPosition(pos) != -1;
+        return world.getBlockState(pos).getBlock() instanceof PortalBlock;
     }
 
     public static boolean isInstanceOfCustomPortal(BlockState state) {
