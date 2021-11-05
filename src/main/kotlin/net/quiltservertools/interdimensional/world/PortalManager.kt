@@ -17,9 +17,9 @@ object PortalManager {
             val name = jsonObject.get("name_identifier").asString
             val frameBlock = Registry.BLOCK.get(Identifier(jsonObject.get("frame_block").asString))
             val destination = Identifier(jsonObject.get("destination").asString)
-            val r = jsonObject.get("r").asByte
-            val g = jsonObject.get("g").asByte
-            val b = jsonObject.get("b").asByte
+            val r = jsonObject.get("r").asInt.toUByte()
+            val g = jsonObject.get("g").asInt.toUByte()
+            val b = jsonObject.get("b").asInt.toUByte()
             val flat = jsonObject.get("horizontal").asBoolean
             val sourceWorld = if (!jsonObject.has("source_world")) {
                 Identifier("minecraft", "overworld")
@@ -52,9 +52,9 @@ object PortalManager {
             jsonObject.addProperty("name_identifier", portal.name)
             jsonObject.addProperty("frame_block", Registry.BLOCK.getId(portal.frameBlock).toString())
             jsonObject.addProperty("destination", portal.destination.toString())
-            jsonObject.addProperty("r", portal.r)
-            jsonObject.addProperty("g", portal.g)
-            jsonObject.addProperty("b", portal.b)
+            jsonObject.addProperty("r", portal.r.toInt())
+            jsonObject.addProperty("g", portal.g.toInt())
+            jsonObject.addProperty("b", portal.b.toInt())
             jsonObject.addProperty("horizontal", portal.horizontal)
             jsonObject.addProperty("source_world", portal.sourceWorld.toString())
 

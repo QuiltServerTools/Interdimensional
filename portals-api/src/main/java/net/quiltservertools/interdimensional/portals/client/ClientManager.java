@@ -28,7 +28,7 @@ public class ClientManager {
         if (positions.containsKey(pos)) {
             return positions.get(pos);
         }
-        return -1;
+        return 5836712;
     }
 
     public boolean contains(BlockPos pos) {
