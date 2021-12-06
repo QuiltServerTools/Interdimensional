@@ -1,7 +1,11 @@
 package net.quiltservertools.interdimensional.portals.client;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.block.Blocks;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
 
 import java.util.HashMap;
@@ -25,10 +29,7 @@ public class ClientManager {
     }
 
     public int getColorAtPosition(BlockPos pos) {
-        if (positions.containsKey(pos)) {
-            return positions.get(pos);
-        }
-        return 5836712;
+        return positions.get(pos);
     }
 
     public boolean contains(BlockPos pos) {
@@ -39,6 +40,16 @@ public class ClientManager {
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.SYNC_PORTALS, ((client, handler, buf, responseSender) -> {
             var pos = buf.readBlockPos();
             var color = buf.readInt();
+            if (client.world == null) return;
+            System.out.println("No client world");
+            var direction = buf.readInt();
+            Direction.Axis axis;
+            switch (direction) {
+                case 1 -> axis = Direction.Axis.Z;
+                case 2 -> axis = Direction.Axis.Y;
+                default -> axis = Direction.Axis.X;
+            }
+            client.world.setBlockState(pos, InterdimensionalPortals.portalBlock.getDefaultState().with(Properties.HORIZONTAL_AXIS, axis));
             addBlock(pos, color);
         }));
     }

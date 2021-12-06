@@ -1,25 +1,19 @@
 package net.quiltservertools.interdimensional.command
 
-import com.google.common.collect.ImmutableList
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.tree.LiteralCommandNode
-import com.mojang.datafixers.util.Function3
-import com.mojang.datafixers.util.Pair
 import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.Biome.MixedNoisePoint
-import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.biome.source.FixedBiomeSource
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource.Preset
 import net.minecraft.world.biome.source.TheEndBiomeSource
-import net.minecraft.world.biome.source.VanillaLayeredBiomeSource
 import net.minecraft.world.gen.chunk.FlatChunkGenerator
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig
 import net.minecraft.world.gen.chunk.StructureConfig
@@ -30,7 +24,6 @@ import net.quiltservertools.interdimensional.command.argument.ServerDimensionArg
 import net.quiltservertools.interdimensional.customGenerator
 import net.quiltservertools.interdimensional.mixin.ChunkGeneratorAccessor
 import java.util.*
-import java.util.function.Supplier
 
 object GeneratorCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
@@ -60,6 +53,7 @@ object GeneratorCommand : Command {
 
         // Handle biome sources. Only one is allowed at any one time
         var biomeSource = generator!!.biomeSource
+
         val biomeSeed = if (propertyMap.containsKey("biome_seed")) propertyMap["biome_seed"] as Long else seed
         if (propertyMap.containsKey("single_biome")) {
             biomeSource = FixedBiomeSource(
@@ -68,19 +62,20 @@ object GeneratorCommand : Command {
                 )]
             )
             scs.sendFeedback(InterdimensionalCommand.info("Set biome source to Single Biome"), false)
-        } else if (propertyMap.containsKey("vanilla_layered")) {
-            val largeBiomes = propertyMap.containsKey("large_biomes") && propertyMap["large_biomes"] as Boolean
-            biomeSource =
-                VanillaLayeredBiomeSource(biomeSeed, false, largeBiomes, scs.registryManager.get(Registry.BIOME_KEY))
-            scs.sendFeedback(InterdimensionalCommand.info("Set biome source to Vanilla Layered"), false)
         } else if (propertyMap.containsKey("multi_noise")) {
-            val worldLike = ServerDimensionArgument.get(ctx, "noise_like")
+            val worldLike = ctx.source.server.getWorld(RegistryKey.of(Registry.WORLD_KEY, propertyMap["multi_noise"] as Identifier))!!
             biomeSource = if (worldLike.chunkManager.chunkGenerator.biomeSource is MultiNoiseBiomeSource) {
                 worldLike.chunkManager.chunkGenerator.biomeSource
             } else {
-                MultiNoiseBiomeSource.method_35242(worldLike.registryManager.get(Registry.BIOME_KEY), biomeSeed)
+                val selectedBiomes = worldLike.registryManager.get(Registry.BIOME_KEY).entries
+                val overworldBiomeSource = ctx.source.server.overworld.chunkManager.chunkGenerator.biomeSource.withSeed(biomeSeed)
+                val biomes: Set<Biome> = selectedBiomes.map {
+                    it.value
+                }.toSet()
+                overworldBiomeSource.biomes.clear()
+                overworldBiomeSource.biomes.addAll(biomes)
+                overworldBiomeSource
             }
-
         } else if (propertyMap.containsKey("the_end_biome_source")) {
             biomeSource = TheEndBiomeSource(scs.registryManager.get(Registry.BIOME_KEY), biomeSeed)
             scs.sendFeedback(InterdimensionalCommand.info("Set biome source to End Biome Source"), false)

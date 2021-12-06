@@ -20,8 +20,8 @@ public class InterdimensionalPortalsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.NETHER_PORTAL, RenderLayer.getTranslucent());
-        ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> ClientManager.getInstance().getColorAtPosition(pos), Blocks.NETHER_PORTAL);
+        BlockRenderLayerMap.INSTANCE.putBlock(InterdimensionalPortals.portalBlock, RenderLayer.getTranslucent());
+        ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> ClientManager.getInstance().getColorAtPosition(pos), InterdimensionalPortals.portalBlock);
         ClientManager.getInstance().register();
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
     }

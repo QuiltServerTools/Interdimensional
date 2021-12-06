@@ -96,9 +96,9 @@ object PortalCommand : Command {
                         blockState.blockState.block,
                         destination,
                         sourceWorld,
-                        (rgb[0] * 255).toInt().toByte(),
-                        (rgb[1] * 255).toInt().toByte(),
-                        (rgb[2] * 255).toInt().toByte(),
+                        (rgb[0] * 255).toInt().toUByte(),
+                        (rgb[1] * 255).toInt().toUByte(),
+                        (rgb[2] * 255).toInt().toUByte(),
                         flat,
                         ignitionSource
                     )
@@ -110,9 +110,9 @@ object PortalCommand : Command {
                     blockState.blockState.block,
                     destination,
                     sourceWorld,
-                    0,
-                    0,
-                    0,
+                    (0).toUByte(),
+                    (0).toUByte(),
+                    (0).toUByte(),
                     flat,
                     ignitionSource
                 )
