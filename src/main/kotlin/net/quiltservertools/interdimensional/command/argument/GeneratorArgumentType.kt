@@ -3,6 +3,7 @@ package net.quiltservertools.interdimensional.command.argument
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.LongArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
+import net.minecraft.command.argument.DimensionArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.command.suggestion.SuggestionProviders
 
@@ -14,9 +15,8 @@ class GeneratorArgumentType : AbstractInterdimensionalArgumentType() {
         //Noise
         criteriumSuggestors["single_biome"] =
             Suggestor(IdentifierArgumentType.identifier(), SuggestionProviders.ALL_BIOMES)
-        criteriumSuggestors["vanilla_layered"] = Suggestor(BoolArgumentType.bool())
 
-        criteriumSuggestors["multi_noise"] = Suggestor(ServerDimensionArgument.dimension("noise_like").type)
+        criteriumSuggestors["multi_noise"] = Suggestor(DimensionArgumentType.dimension())
         criteriumSuggestors["the_end_biome_source"] = Suggestor(BoolArgumentType.bool())
 
         //Options

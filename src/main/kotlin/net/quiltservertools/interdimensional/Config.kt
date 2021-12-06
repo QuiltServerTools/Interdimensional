@@ -38,7 +38,7 @@ class Config private constructor(json: JsonElement, newPath: Path) {
         fun createConfig(path: Path): Config {
             var json: JsonObject
             try {
-                json = JsonParser().parse(Files.readString(path)).asJsonObject
+                json = JsonParser.parseString(Files.readString(path)).asJsonObject
             } catch (e: IOException) {
                 try {
                     Files.copy(

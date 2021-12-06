@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.quiltservertools.interdimensional.portals.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "EntityMixin",
     "PlayerMixin",
@@ -11,8 +11,7 @@
   "client": [
     "client.ClientPlayerMixin",
     "client.InGameHudMixin",
-    "client.ClientWorldMixin",
-    "client.NetherPortalMixin"
+    "client.ClientWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
