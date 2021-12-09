@@ -24,6 +24,8 @@ allprojects {
         maven {
             url = "https://maven.kyrptonaught.dev/"
         }
+
+        mavenLocal()
     }
 
     dependencies {
@@ -35,7 +37,7 @@ allprojects {
         // Fabric API
         modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-        modImplementation(include("eu.pb4:polymer:0.2.0-beta.8+1.18"))
+        modImplementation(include("eu.pb4:polymer:0.2.0-beta.9+1.18"))
     }
 
     processResources {

@@ -1,6 +1,8 @@
 package net.quiltservertools.interdimensional.portals;
 
-import eu.pb4.polymer.block.VirtualBlock;
+import eu.pb4.polymer.api.block.PlayerAwarePolymerBlock;
+import eu.pb4.polymer.api.block.PolymerBlock;
+import eu.pb4.polymer.api.client.PolymerKeepModel;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -30,26 +32,26 @@ import net.quiltservertools.interdimensional.portals.util.PortalLink;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
-public class PortalBlock extends Block implements VirtualBlock {
-    @Override
-    public Block getVirtualBlock() {
-        return Blocks.NETHER_PORTAL;
-    }
+public class PortalBlock extends Block implements PlayerAwarePolymerBlock, PolymerKeepModel {
 
     @Override
-    public BlockState getVirtualBlockState(BlockState state) {
+    public Block getPolymerBlock(BlockState blockState) {
+        return Blocks.NETHER_PORTAL;
+    }
+    
+    @Override
+    public BlockState getPolymerBlockState(ServerPlayerEntity player, BlockState state) {
         return Blocks.NETHER_PORTAL.getDefaultState().with(NetherPortalBlock.AXIS, state.get(PortalBlock.AXIS));
     }
 
     @Override
-    public void sendPacketsAfterCreation(ServerPlayerEntity player, BlockPos pos, BlockState blockState) {
+    public void onPolymerBlockSend(ServerPlayerEntity player, BlockPos.Mutable pos, BlockState blockState) {
         var portal = CustomPortalApiRegistry.getPortalLinkFromBase(InterdimensionalPortals.getPortalBase(player.world, pos));
         if (portal != null) {
             if (portal.colorID != 0) {
                 NetworkManager.sendPortalInfo(player, pos, blockState.get(AXIS), portal.colorID);
             }
         }
-        VirtualBlock.super.sendPacketsAfterCreation(player, pos, blockState);
     }
 
     public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;

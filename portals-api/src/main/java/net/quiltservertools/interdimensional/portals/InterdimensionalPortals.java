@@ -39,6 +39,9 @@ public class InterdimensionalPortals implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        portalBlock = new PortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
+        Registry.register(Registry.BLOCK, new Identifier(InterdimensionalPortals.MOD_ID, "portal_block"), portalBlock);
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             for (RegistryKey<World> registryKey : server.getWorldRegistryKeys()) {
                 dims.put(registryKey.getValue(), registryKey);
@@ -134,10 +137,5 @@ public class InterdimensionalPortals implements ModInitializer {
         if (state.getBlock() instanceof PortalBlock)
             return state.with(PortalBlock.AXIS, axis);
         return state;
-    }
-
-    static {
-        portalBlock = new PortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
-        Registry.register(Registry.BLOCK, new Identifier(InterdimensionalPortals.MOD_ID, "portal_block"), portalBlock);
     }
 }
