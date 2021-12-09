@@ -38,10 +38,23 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
     public Block getPolymerBlock(BlockState blockState) {
         return Blocks.NETHER_PORTAL;
     }
+
+    @Override
+    public Block getPolymerBlock(ServerPlayerEntity player, BlockState state) {
+        return NetworkManager.isVanilla(player)
+                ? getPolymerBlock(state)
+                : this;
+    }
+
+    public BlockState getPolymerBlockState(BlockState state) {
+        return Blocks.NETHER_PORTAL.getDefaultState().with(NetherPortalBlock.AXIS, state.get(PortalBlock.AXIS));
+    }
     
     @Override
     public BlockState getPolymerBlockState(ServerPlayerEntity player, BlockState state) {
-        return Blocks.NETHER_PORTAL.getDefaultState().with(NetherPortalBlock.AXIS, state.get(PortalBlock.AXIS));
+        return NetworkManager.isVanilla(player)
+                ? getPolymerBlockState(state)
+                : state;
     }
 
     @Override
@@ -79,7 +92,6 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
             if (portalFrameTester.wasAlreadyValid())
                 return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         }
-        //todo handle unknown portallink
 
         return Blocks.AIR.getDefaultState();
     }
@@ -103,10 +115,10 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
                     }
                 }
             }
+        } else {
             if (!ClientManager.getInstance().contains(pos)) {
                 ((ClientPlayerInColoredPortal) MinecraftClient.getInstance().player).setLastUsedPortalColor(ClientManager.getInstance().getColorAtPosition(pos));
             }
-            InterdimensionalPortals.portalBlock.onEntityCollision(state, world, pos, entity);
         }
     }
 
@@ -138,6 +150,5 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
 
             world.addParticle(new BlockStateParticleEffect(InterdimensionalPortalsClient.CUSTOMPORTALPARTICLE, state), d, e, f, g, h, j);
         }
-
     }
 }
