@@ -1,7 +1,7 @@
 {
   "textures": {
-    "particle": "block/nether_portal",
-    "portal": "block/nether_portal"
+    "particle": "interdimensional-portals-api:block/portal_block",
+    "portal": "interdimensional-portals-api:block/portal_block"
   },
   "elements": [
     {

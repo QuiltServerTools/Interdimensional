@@ -1,7 +1,8 @@
 package net.quiltservertools.interdimensional.portals.client;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.block.Blocks;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -18,7 +19,7 @@ public class ClientManager {
         return instance;
     }
 
-    private final Map<BlockPos, Integer> positions = new HashMap<>();
+    private final Object2IntMap<BlockPos> positions = new Object2IntOpenHashMap<>();
 
     private void addBlock(BlockPos pos, int color) {
         positions.put(pos, color);
@@ -29,7 +30,7 @@ public class ClientManager {
     }
 
     public int getColorAtPosition(BlockPos pos) {
-        return positions.get(pos);
+        return positions.getOrDefault(pos, 0xFFFFFF);
     }
 
     public boolean contains(BlockPos pos) {

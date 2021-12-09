@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "interdimensional-portals-api:block/portal_block_ns"
+    },
+    "axis=z": {
+      "model": "interdimensional-portals-api:block/portal_block_ew"
+    }
+  }
+}
