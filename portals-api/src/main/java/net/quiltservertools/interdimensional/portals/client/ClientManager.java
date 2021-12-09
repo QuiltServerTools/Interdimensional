@@ -41,7 +41,6 @@ public class ClientManager {
             var pos = buf.readBlockPos();
             var color = buf.readInt();
             if (client.world == null) return;
-            System.out.println("No client world");
             var direction = buf.readInt();
             Direction.Axis axis;
             switch (direction) {
