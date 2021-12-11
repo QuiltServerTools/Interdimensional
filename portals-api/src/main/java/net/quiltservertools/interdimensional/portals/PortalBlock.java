@@ -1,13 +1,12 @@
 package net.quiltservertools.interdimensional.portals;
 
 import eu.pb4.polymer.api.block.PlayerAwarePolymerBlock;
-import eu.pb4.polymer.api.block.PolymerBlock;
+import eu.pb4.polymer.api.client.PolymerClientDecoded;
 import eu.pb4.polymer.api.client.PolymerKeepModel;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -31,11 +30,11 @@ import net.quiltservertools.interdimensional.portals.util.PortalLink;
 
 import java.util.Random;
 
-@SuppressWarnings("deprecation")
-public class PortalBlock extends Block implements PlayerAwarePolymerBlock, PolymerKeepModel {
+@SuppressWarnings({"deprecation", "UnstableApiUsage"})
+public class PortalBlock extends Block implements PlayerAwarePolymerBlock, PolymerKeepModel, PolymerClientDecoded {
 
     @Override
-    public Block getPolymerBlock(BlockState blockState) {
+    public Block getPolymerBlock(BlockState state) {
         return Blocks.NETHER_PORTAL;
     }
 
@@ -102,21 +101,22 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient()) {
-            if (!entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
-                EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
-                entityInPortal.increaseCooldown();
-                if (!entityInPortal.didTeleport()) {
-                    entityInPortal.setInPortal(true);
-                    if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
-                        entityInPortal.setDidTP(true);
-                        if (!world.isClient)
-                            CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+        if (!entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
+            EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
+            entityInPortal.increaseCooldown();
+            if (!entityInPortal.didTeleport()) {
+                entityInPortal.setInPortal(true);
+                if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
+                    entityInPortal.setDidTP(true);
+                    if (!world.isClient) {
+                        CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+                    } else {
+                        ((ClientPlayerInColoredPortal) MinecraftClient.getInstance().player).setLastUsedPortalColor(-1);
                     }
                 }
             }
         } else {
-            if (!ClientManager.getInstance().contains(pos)) {
+            if (ClientManager.getInstance().contains(pos)) {
                 ((ClientPlayerInColoredPortal) MinecraftClient.getInstance().player).setLastUsedPortalColor(ClientManager.getInstance().getColorAtPosition(pos));
             }
         }

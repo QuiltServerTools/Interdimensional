@@ -3,3 +3,5 @@ repositories {
         url 'https://maven.nucleoid.xyz'
     }
 }
+
+archivesBaseName = "interdimensional-portals"

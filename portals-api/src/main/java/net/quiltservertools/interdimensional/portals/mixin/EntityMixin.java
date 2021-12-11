@@ -1,13 +1,11 @@
 package net.quiltservertools.interdimensional.portals.mixin;
 
-import net.minecraft.util.math.BlockPos;
-import net.quiltservertools.interdimensional.portals.client.ClientManager;
-import net.quiltservertools.interdimensional.portals.interfaces.CustomTeleportingEntity;
-import net.quiltservertools.interdimensional.portals.interfaces.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.TeleportTarget;
+import net.quiltservertools.interdimensional.portals.interfaces.CustomTeleportingEntity;
+import net.quiltservertools.interdimensional.portals.interfaces.EntityInCustomPortal;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -76,17 +74,5 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
         if (this.didTeleport())
             return;
         ServerWorld.createEndSpawnPlatform(world);
-    }
-
-    @Inject(method = "readNbt", at = @At(value = "TAIL"))
-    public void CPAreadCustomPortalFromTag(NbtCompound tag, CallbackInfo ci) {
-        this.didTP = tag.getBoolean("cpadidTP");
-        this.coolDown = tag.getInt("cpacooldown");
-    }
-
-    @Inject(method = "writeNbt", at = @At(value = "RETURN"))
-    public void CPAwriteCustomPortalToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
-        cir.getReturnValue().putBoolean("cpadidTP", didTP);
-        cir.getReturnValue().putInt("cpacooldown", coolDown);
     }
 }

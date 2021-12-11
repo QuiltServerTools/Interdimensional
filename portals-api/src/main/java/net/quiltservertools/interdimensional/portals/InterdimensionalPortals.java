@@ -3,14 +3,6 @@ package net.quiltservertools.interdimensional.portals;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder;
-import net.quiltservertools.interdimensional.portals.client.ClientManager;
-import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
-import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;
-import net.quiltservertools.interdimensional.portals.portal.PortalPlacer;
-import net.quiltservertools.interdimensional.portals.portal.frame.CustomAreaHelper;
-import net.quiltservertools.interdimensional.portals.portal.frame.FlatPortalAreaHelper;
-import net.quiltservertools.interdimensional.portals.portal.linking.PortalLinkingStorage;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,13 +17,18 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;
+import net.quiltservertools.interdimensional.portals.portal.PortalPlacer;
+import net.quiltservertools.interdimensional.portals.portal.frame.CustomAreaHelper;
+import net.quiltservertools.interdimensional.portals.portal.frame.FlatPortalAreaHelper;
+import net.quiltservertools.interdimensional.portals.portal.linking.PortalLinkingStorage;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 
 public class InterdimensionalPortals implements ModInitializer {
     public static final String MOD_ID = "interdimensional-portals-api";
-    public static PortalBlock portalBlock;
+    public static PortalBlock PORTAL_BLOCK;
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
     public static Identifier VANILLA_NETHERPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
     public static Identifier FLATPORTAL_FRAMETESTER = new Identifier(MOD_ID, "flat");
@@ -39,8 +36,8 @@ public class InterdimensionalPortals implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        portalBlock = new PortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
-        Registry.register(Registry.BLOCK, new Identifier(InterdimensionalPortals.MOD_ID, "portal_block"), portalBlock);
+        PORTAL_BLOCK = new PortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
+        Registry.register(Registry.BLOCK, new Identifier(InterdimensionalPortals.MOD_ID, "portal_block"), PORTAL_BLOCK);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             for (RegistryKey<World> registryKey : server.getWorldRegistryKeys()) {
@@ -86,7 +83,7 @@ public class InterdimensionalPortals implements ModInitializer {
     }
 
     public static Block getDefaultPortalBlock() {
-        return portalBlock;
+        return PORTAL_BLOCK;
     }
 
     public static Block getPortalBase(BlockView world, BlockPos pos) {

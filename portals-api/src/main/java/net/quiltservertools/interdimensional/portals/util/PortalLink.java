@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class PortalLink {
     public Identifier block;
     public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.FIRE;
-    private PortalBlock portalBlock = InterdimensionalPortals.portalBlock;
+    private PortalBlock portalBlock = InterdimensionalPortals.PORTAL_BLOCK;
     public Identifier dimID;
     public Identifier returnDimID = new Identifier("overworld");
     public boolean onlyIgnitableInReturnDim = false;

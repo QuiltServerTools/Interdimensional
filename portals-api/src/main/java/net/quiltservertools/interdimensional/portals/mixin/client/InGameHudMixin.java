@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
-import net.quiltservertools.interdimensional.portals.client.ClientManager;
 import net.quiltservertools.interdimensional.portals.interfaces.ClientPlayerInColoredPortal;
 import net.quiltservertools.interdimensional.portals.util.ColorUtil;
 import net.minecraft.block.BlockState;
@@ -33,12 +32,16 @@ public class InGameHudMixin {
         if (color >= 0) {
             float[] colors = ColorUtil.getColorForBlock(color);
             RenderSystem.setShaderColor(colors[0], colors[1], colors[2], alpha);
-        } else
+        } else {
             RenderSystem.setShaderColor(red, green, blue, alpha);
+        }
     }
 
     @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;getModelParticleSprite(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/texture/Sprite;"))
     public Sprite renderCustomPortalOverlay(BlockModels blockModels, BlockState blockState) {
-        return this.client.getBlockRenderManager().getModels().getModelParticleSprite(InterdimensionalPortals.portalBlock.getDefaultState());
+        if (((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor() >= 0) {
+            return this.client.getBlockRenderManager().getModels().getModelParticleSprite(InterdimensionalPortals.PORTAL_BLOCK.getDefaultState());
+        }
+        return this.client.getBlockRenderManager().getModels().getModelParticleSprite(Blocks.NETHER_PORTAL.getDefaultState());
     }
 }

@@ -9,9 +9,6 @@ import net.minecraft.util.math.Direction;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.networking.NetworkManager;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ClientManager {
     private static final ClientManager instance = new ClientManager();
 
@@ -49,7 +46,7 @@ public class ClientManager {
                 case 2 -> axis = Direction.Axis.Y;
                 default -> axis = Direction.Axis.X;
             }
-            client.world.setBlockState(pos, InterdimensionalPortals.portalBlock.getDefaultState().with(Properties.HORIZONTAL_AXIS, axis));
+            client.world.setBlockState(pos, InterdimensionalPortals.PORTAL_BLOCK.getDefaultState().with(Properties.HORIZONTAL_AXIS, axis));
             addBlock(pos, color);
         }));
     }

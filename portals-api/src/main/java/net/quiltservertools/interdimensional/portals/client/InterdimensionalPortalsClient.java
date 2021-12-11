@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
@@ -20,8 +19,8 @@ public class InterdimensionalPortalsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlock(InterdimensionalPortals.portalBlock, RenderLayer.getTranslucent());
-        ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> ClientManager.getInstance().getColorAtPosition(pos), InterdimensionalPortals.portalBlock);
+        BlockRenderLayerMap.INSTANCE.putBlock(InterdimensionalPortals.PORTAL_BLOCK, RenderLayer.getTranslucent());
+        ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> ClientManager.getInstance().getColorAtPosition(pos), InterdimensionalPortals.PORTAL_BLOCK);
         ClientManager.getInstance().register();
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
     }

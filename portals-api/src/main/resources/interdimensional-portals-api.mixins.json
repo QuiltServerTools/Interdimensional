@@ -11,7 +11,8 @@
   "client": [
     "client.ClientPlayerMixin",
     "client.InGameHudMixin",
-    "client.ClientWorldMixin"
+    "client.ClientWorldMixin",
+    "client.NetherPortalBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
