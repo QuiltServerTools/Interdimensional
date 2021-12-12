@@ -52,7 +52,7 @@ object GeneratorCommand : Command {
                                     addMultiNoise(
                                         it,
                                         ServerDimensionArgument.get(it, "multi_noise_like"),
-                                        LongArgumentType.getLong(it, "multi_noise_like")
+                                        LongArgumentType.getLong(it, "multi_noise_seed")
                                     )
                                 }
                             )
@@ -112,7 +112,7 @@ object GeneratorCommand : Command {
 
     private fun updateBiomeSeed(ctx: CommandContext<ServerCommandSource>, seed: Long): Int {
         val scs = ctx.source
-        val generator = getGenerator(scs)
+        val generator = getGenerator(scs).withSeed(seed)
         val biomeSource = generator.biomeSource.withSeed(seed)
         (generator as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
         setGenerator(generator, scs)
@@ -123,11 +123,13 @@ object GeneratorCommand : Command {
     private fun addMultiNoise(ctx: CommandContext<ServerCommandSource>, noiseLike: ServerWorld, seed: Long?): Int {
         val scs = ctx.source
         var biomeSource = noiseLike.chunkManager.chunkGenerator.biomeSource
+        var generator = getGenerator(scs)
         if (seed != null) {
             biomeSource = biomeSource.withSeed(seed)
+            generator = generator.withSeed(seed)
         }
-        val generator = getGenerator(scs)
         (generator as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
+        setGenerator(generator, scs)
         scs.sendFeedback(
             "Set biome source to multi-noise biomes of ${noiseLike.registryKey.value} with seed ${seed ?: noiseLike.seed}".info(),
             false
