@@ -104,9 +104,9 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
         if (!entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
             EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
             entityInPortal.increaseCooldown();
-            if (!entityInPortal.didTeleport()) {
+            if (!entityInPortal.hasTeleported()) {
                 entityInPortal.setInPortal(true);
-                if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
+                if (entityInPortal.getTimeInPortal() >= (entity.isInvulnerable() ? entity.getMaxNetherPortalTime() + entity.getDefaultNetherPortalCooldown() : entity.getMaxNetherPortalTime())) {
                     entityInPortal.setDidTP(true);
                     if (!world.isClient) {
                         CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);

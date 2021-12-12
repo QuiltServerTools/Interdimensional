@@ -58,7 +58,7 @@ object CreateCommand : Command {
     ): Int {
         val propertyMap: HashMap<String, Any> = DimensionOverrideArgumentType.rawProperties(args)
         val scs = ctx.source!!
-        scs.sendFeedback(info("Creating dimension $identifier"), false)
+        scs.sendFeedback("Creating dimension $identifier".info(), false)
 
         val config = RuntimeWorldConfig()
         val generator: ChunkGenerator =
@@ -100,7 +100,7 @@ object CreateCommand : Command {
         }
 
         RuntimeWorldManager.add(config, identifier)
-        scs.sendFeedback(success("Created new world: $identifier"), true)
+        scs.sendFeedback("Created new world: $identifier".success(), true)
 
         return 1
     }

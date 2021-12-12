@@ -9,7 +9,7 @@ public interface EntityInCustomPortal {
         return 0;
     }
 
-    boolean didTeleport();
+    boolean hasTeleported();
 
     void setDidTP(boolean didTP);
 

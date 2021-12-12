@@ -119,14 +119,14 @@ object PortalCommand : Command {
             )
         }
 
-        source.sendFeedback(success("Created portal from $sourceWorld to $destination with frame ${blockState.blockState.block}"), false)
+        source.sendFeedback("Created portal from $sourceWorld to $destination with frame ${blockState.blockState.block}".success(), false)
 
         return 1
     }
 
     private fun remove(source: ServerCommandSource, name: String): Int {
         PortalManager.portals.removeIf { it.name == name }
-        source.sendFeedback(success("Removed portal $name"), false)
+        source.sendFeedback("Removed portal $name".success(), false)
         return 1
     }
 }

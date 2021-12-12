@@ -1,7 +1,6 @@
 package net.quiltservertools.interdimensional.portals.mixin;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.TeleportTarget;
 import net.quiltservertools.interdimensional.portals.interfaces.CustomTeleportingEntity;
@@ -25,7 +24,7 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
 
     @Unique
     @Override
-    public boolean didTeleport() {
+    public boolean hasTeleported() {
         return didTP;
     }
 
@@ -65,13 +64,13 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
 
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     public void CPAgetCustomTPTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        if (this.didTeleport())
+        if (this.hasTeleported())
             cir.setReturnValue(getCustomTeleportTarget());
     }
 
     @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;createEndSpawnPlatform(Lnet/minecraft/server/world/ServerWorld;)V"))
     public void CPAcancelEndPlatformSpawn(ServerWorld world) {
-        if (this.didTeleport())
+        if (this.hasTeleported())
             return;
         ServerWorld.createEndSpawnPlatform(world);
     }

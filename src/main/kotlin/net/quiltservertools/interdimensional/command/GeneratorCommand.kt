@@ -1,141 +1,182 @@
 package net.quiltservertools.interdimensional.command
 
-import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.arguments.LongArgumentType
 import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
-import net.minecraft.server.command.CommandManager
+import net.minecraft.command.argument.IdentifierArgumentType
+import net.minecraft.command.suggestion.SuggestionProviders
+import net.minecraft.server.command.CommandManager.argument
+import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.util.Identifier
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.FixedBiomeSource
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource
 import net.minecraft.world.biome.source.TheEndBiomeSource
-import net.minecraft.world.gen.chunk.FlatChunkGenerator
-import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig
-import net.minecraft.world.gen.chunk.StructureConfig
-import net.minecraft.world.gen.chunk.StructuresConfig
-import net.minecraft.world.gen.feature.StructureFeature
-import net.quiltservertools.interdimensional.command.argument.GeneratorArgumentType
+import net.minecraft.world.gen.chunk.*
+import net.quiltservertools.interdimensional.command.InterdimensionalCommand.error
+import net.quiltservertools.interdimensional.command.InterdimensionalCommand.info
 import net.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
 import net.quiltservertools.interdimensional.customGenerator
 import net.quiltservertools.interdimensional.mixin.ChunkGeneratorAccessor
-import java.util.*
 
 object GeneratorCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
-        return CommandManager.literal("generator")
+        return literal("generator")
             .requires(Permissions.require("interdimensional.commands.generator", 3))
-            .then(CommandManager.argument("args", StringArgumentType.greedyString())
-                .suggests(GeneratorArgumentType())
-                .executes { ctx: CommandContext<ServerCommandSource> ->
-                    updateGenerator(
-                        ctx,
-                        GeneratorArgumentType().rawProperties(StringArgumentType.getString(ctx, "args"))
+            .then(literal("clear")
+                .executes { resetGenerator(it, null) }
+                .then(ServerDimensionArgument.dimension("default")
+                    .executes { resetGenerator(it, ServerDimensionArgument.get(it, "default")) }
+                )
+            )
+            .then(
+                literal("biome_seed")
+                    .then(argument("biome_seed", LongArgumentType.longArg())
+                        .executes { updateBiomeSeed(it, LongArgumentType.getLong(it, "biome_seed")) })
+            )
+            .then(
+                literal("biome_source")
+                    .then(literal("multi_noise")
+                        .then(ServerDimensionArgument.dimension("multi_noise_like")
+                            .executes {
+                                addMultiNoise(
+                                    it,
+                                    ServerDimensionArgument.get(it, "multi_noise_like"),
+                                    null
+                                )
+                            }
+                            .then(argument("multi_noise_seed", LongArgumentType.longArg())
+                                .executes {
+                                    addMultiNoise(
+                                        it,
+                                        ServerDimensionArgument.get(it, "multi_noise_like"),
+                                        LongArgumentType.getLong(it, "multi_noise_like")
+                                    )
+                                }
+                            )
+                        )
                     )
-                })
+                    .then(
+                        literal("single_biome")
+                            .then(
+                                argument(
+                                    "biome",
+                                    IdentifierArgumentType.identifier()
+                                ).suggests(SuggestionProviders.ALL_BIOMES)
+                                    .executes {
+                                        addSingleBiome(
+                                            it,
+                                            it.source.registryManager.get(Registry.BIOME_KEY)
+                                                .get(IdentifierArgumentType.getIdentifier(it, "biome"))
+                                        )
+                                    }
+                            )
+                    )
+                    .then(
+                        literal("end_biome_source")
+                            .then(
+                                ServerDimensionArgument.dimension("biomes")
+                                    .then(argument("seed", LongArgumentType.longArg())
+                                        .executes {
+                                            addEndBiomeSource(
+                                                it,
+                                                ServerDimensionArgument.get(it, "biomes"),
+                                                LongArgumentType.getLong(it, "seed")
+                                            )
+                                        }
+                                    )
+                            )
+                            .then(argument("seed", LongArgumentType.longArg())
+                                .executes {
+                                    addEndBiomeSource(
+                                        it,
+                                        null,
+                                        LongArgumentType.getLong(it, "seed")
+                                    )
+                                }
+                            )
+                    )
+            )
             .build()
     }
 
-    @Throws(CommandSyntaxException::class)
-    private fun updateGenerator(ctx: CommandContext<ServerCommandSource>, propertyMap: HashMap<String, Any>): Int {
-        val scs = ctx.source
-
-        var generator = scs.player.customGenerator
-        if (generator == null) generator = scs.world.chunkManager.chunkGenerator
-        var seed = scs.world.seed
-        if (propertyMap.containsKey("seed")) {
-            seed = propertyMap["seed"] as Long
-        }
-
-        // Handle biome sources. Only one is allowed at any one time
-        var biomeSource = generator!!.biomeSource
-
-        val biomeSeed = if (propertyMap.containsKey("biome_seed")) propertyMap["biome_seed"] as Long else seed
-        if (propertyMap.containsKey("single_biome")) {
-            biomeSource = FixedBiomeSource(
-                scs.registryManager.get(Registry.BIOME_KEY)[Identifier(
-                    propertyMap["single_biome"] as String
-                )]
-            )
-            scs.sendFeedback(InterdimensionalCommand.info("Set biome source to Single Biome"), false)
-        } else if (propertyMap.containsKey("multi_noise")) {
-            val worldLike = ctx.source.server.getWorld(RegistryKey.of(Registry.WORLD_KEY, propertyMap["multi_noise"] as Identifier))!!
-            biomeSource = if (worldLike.chunkManager.chunkGenerator.biomeSource is MultiNoiseBiomeSource) {
-                worldLike.chunkManager.chunkGenerator.biomeSource
-            } else {
-                val selectedBiomes = worldLike.registryManager.get(Registry.BIOME_KEY).entries
-                val overworldBiomeSource = ctx.source.server.overworld.chunkManager.chunkGenerator.biomeSource.withSeed(biomeSeed)
-                val biomes: Set<Biome> = selectedBiomes.map {
-                    it.value
-                }.toSet()
-                overworldBiomeSource.biomes.clear()
-                overworldBiomeSource.biomes.addAll(biomes)
-                overworldBiomeSource
-            }
-        } else if (propertyMap.containsKey("the_end_biome_source")) {
-            biomeSource = TheEndBiomeSource(scs.registryManager.get(Registry.BIOME_KEY), biomeSeed)
-            scs.sendFeedback(InterdimensionalCommand.info("Set biome source to End Biome Source"), false)
-        } else {
-            scs.sendFeedback(InterdimensionalCommand.info("No biome source option specified, using default"), false)
-        }
-        (generator as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
-        val structuresConfig: StructuresConfig
-        // Handle structures
-        if (!propertyMap.containsKey("generate_structures") || propertyMap["generate_structures"] as Boolean) {
-            val generateStrongholds =
-                !propertyMap.containsKey("generate_strongholds") || propertyMap["generate_strongholds"] as Boolean
-            structuresConfig = if (propertyMap.containsKey("exclude_structures")) {
-                generateStructuresConfig(generateStrongholds, propertyMap["exclude_structures"] as String, true)
-            } else if (propertyMap.containsKey("include_structures")) {
-                generateStructuresConfig(generateStrongholds, propertyMap["include_structures"] as String, false)
-            } else {
-                generateStructuresConfig(generateStrongholds, "", true)
-            }
-            scs.sendFeedback(
-                InterdimensionalCommand.info("Set structures config to default" + (if (generateStrongholds) " with strongholds" else "") + " and overrides"),
-                false
-            )
-        } else {
-            structuresConfig = StructuresConfig(Optional.empty(), HashMap())
-        }
-        (generator as ChunkGeneratorAccessor).structuresConfig = structuresConfig
-        if (!(propertyMap.containsKey("superflat") && propertyMap["superflat"] as Boolean)) {
-            scs.player.customGenerator = generator
-        } else {
-            scs.player.customGenerator =
-                FlatChunkGenerator(
-                    FlatChunkGeneratorConfig(
-                        structuresConfig,
-                        scs.registryManager.get(Registry.BIOME_KEY)
-                    )
-                )
-        }
-        scs.sendFeedback(InterdimensionalCommand.success("Updated generator configuration"), false)
-        return 1
+    private fun getGenerator(scs: ServerCommandSource): ChunkGenerator {
+        return scs.player.customGenerator ?: scs.world.chunkManager.chunkGenerator
     }
 
-    private fun generateStructuresConfig(
-        generateStrongholds: Boolean,
-        list: String,
-        exclude: Boolean
-    ): StructuresConfig {
-        val strongholds =
-            if (generateStrongholds) Optional.of(StructuresConfig.DEFAULT_STRONGHOLD) else Optional.empty()
-        val split = list.split(",".toRegex()).toTypedArray()
-        val strings: List<String> = ArrayList(listOf(*split))
-        val features: MutableMap<StructureFeature<*>, StructureConfig> = HashMap()
-        StructuresConfig.DEFAULT_STRUCTURES.forEach { (structureFeature: StructureFeature<*>, structureConfig: StructureConfig) ->
-            if (exclude && !strings.contains(structureFeature.name) || !exclude && strings.contains(
-                    structureFeature.name
-                )
-            ) {
-                features[structureFeature] = structureConfig
-            }
+    private fun setGenerator(generator: ChunkGenerator, scs: ServerCommandSource) {
+        scs.player.customGenerator = generator
+    }
+
+    private fun updateBiomeSeed(ctx: CommandContext<ServerCommandSource>, seed: Long): Int {
+        val scs = ctx.source
+        val generator = getGenerator(scs)
+        val biomeSource = generator.biomeSource.withSeed(seed)
+        (generator as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
+        setGenerator(generator, scs)
+        scs.sendFeedback("Updated biome source to have seed $seed".info(), false)
+        return 0
+    }
+
+    private fun addMultiNoise(ctx: CommandContext<ServerCommandSource>, noiseLike: ServerWorld, seed: Long?): Int {
+        val scs = ctx.source
+        var biomeSource = noiseLike.chunkManager.chunkGenerator.biomeSource
+        if (seed != null) {
+            biomeSource = biomeSource.withSeed(seed)
         }
-        return StructuresConfig(strongholds, features)
+        val generator = getGenerator(scs)
+        (generator as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
+        scs.sendFeedback(
+            "Set biome source to multi-noise biomes of ${noiseLike.registryKey.value} with seed ${seed ?: noiseLike.seed}".info(),
+            false
+        )
+        return 0
+    }
+
+    private fun addSingleBiome(ctx: CommandContext<ServerCommandSource>, biome: Biome?): Int {
+        val scs = ctx.source
+        if (biome == null) {
+            scs.sendFeedback("No biome provided for single biome source".error(), false)
+            return 0
+        }
+        val biomeSource = FixedBiomeSource(biome)
+        (getGenerator(scs) as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
+        scs.sendFeedback(
+            "Set biome source to single biome of type ${
+                scs.registryManager.get(Registry.BIOME_KEY).getId(biome)
+            }".info(), false
+        )
+        return 0
+    }
+
+    private fun addEndBiomeSource(
+        ctx: CommandContext<ServerCommandSource>,
+        biomeWorld: ServerWorld?,
+        seed: Long?
+    ): Int {
+        val scs = ctx.source
+        val biomes = if (biomeWorld != null) {
+            biomeWorld.registryManager.get(Registry.BIOME_KEY)
+        } else {
+            scs.world.registryManager.get(Registry.BIOME_KEY)
+        }
+        val generator = getGenerator(scs)
+
+        val biomeSource = TheEndBiomeSource(biomes, seed ?: scs.world.seed)
+        (generator as ChunkGeneratorAccessor).setBiomeSource(biomeSource)
+        setGenerator(generator, scs)
+        return 0
+    }
+
+    private fun resetGenerator(ctx: CommandContext<ServerCommandSource>, defaultWorld: ServerWorld?): Int {
+        val scs = ctx.source
+        scs.player.customGenerator = if (defaultWorld != null) {
+            defaultWorld.chunkManager.chunkGenerator
+        } else {
+            scs.world.chunkManager.chunkGenerator
+        }
+        return 0
     }
 }

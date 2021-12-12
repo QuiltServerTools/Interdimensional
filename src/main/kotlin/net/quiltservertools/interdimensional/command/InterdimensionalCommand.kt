@@ -10,16 +10,16 @@ import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 
 object InterdimensionalCommand {
-    fun error(message: String): Text {
-        return LiteralText("Error: ").formatted(Formatting.RED).append(LiteralText(message))
+    fun String.error(): Text {
+        return LiteralText("Error: ").formatted(Formatting.RED).append(LiteralText(this))
     }
 
-    fun success(message: String): Text {
-        return LiteralText("Success: ").formatted(Formatting.GREEN).append(LiteralText(message))
+    fun String.success(): Text {
+        return LiteralText("Success: ").formatted(Formatting.GREEN).append(LiteralText(this))
     }
 
-    fun info(message: String): Text {
-        return LiteralText("Interdimensional: ").formatted(Formatting.YELLOW).append(LiteralText(message))
+    fun String.info(): Text {
+        return LiteralText("Interdimensional: ").formatted(Formatting.YELLOW).append(LiteralText(this))
     }
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>): LiteralCommandNode<ServerCommandSource> {

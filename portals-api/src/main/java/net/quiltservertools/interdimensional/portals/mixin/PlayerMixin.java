@@ -41,7 +41,7 @@ public abstract class PlayerMixin extends Entity implements EntityInCustomPortal
                 timeInPortal = 0;
                 return;
             }
-            if (!didTeleport())
+            if (!hasTeleported())
                 timeInPortal++;
         }
     }
