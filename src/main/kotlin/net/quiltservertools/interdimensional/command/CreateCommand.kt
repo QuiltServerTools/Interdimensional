@@ -18,12 +18,19 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.Difficulty
 import net.minecraft.world.gen.chunk.ChunkGenerator
+import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import xyz.nucleoid.fantasy.RuntimeWorldConfig
 
 object CreateCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
         return CommandManager.literal("create")
             .requires(Permissions.require("interdimensional.command.create", 3))
+            .then(
+                CommandManager.literal("gui")
+                .executes {
+                    createSgui(it)
+                }
+            )
             .then(CommandManager.argument("identifier", IdentifierArgumentType.identifier())
                 .then(
                     ServerDimensionArgument.dimension("maplike")
@@ -102,6 +109,13 @@ object CreateCommand : Command {
         RuntimeWorldManager.add(config, identifier)
         scs.sendFeedback("Created new world: $identifier".success(), true)
 
+        return 1
+    }
+
+    //todo change commands here to use data class and create new generator
+
+    private fun createSgui(ctx: CommandContext<ServerCommandSource>): Int {
+        CreateGuiHandler(ctx.source.player).open()
         return 1
     }
 }

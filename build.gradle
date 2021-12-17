@@ -69,7 +69,7 @@ allprojects {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from(components["java"])
+            from components.java
         }
     }
 
@@ -87,6 +87,7 @@ dependencies {
 
     modImplementation(include("xyz.nucleoid:fantasy:0.4.3+1.18-pre6"))
     modImplementation(include("me.lucko:fabric-permissions-api:0.1-SNAPSHOT"))
+    modImplementation(include("eu.pb4:sgui:1.0.0-rc6+1.18-pre5"))
 
     subprojects.forEach {
         implementation project(path: ":${it.name}", configuration: "namedElements")

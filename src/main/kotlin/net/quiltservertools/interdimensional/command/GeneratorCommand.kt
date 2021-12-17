@@ -19,6 +19,7 @@ import net.quiltservertools.interdimensional.command.InterdimensionalCommand.err
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.info
 import net.quiltservertools.interdimensional.command.argument.ServerDimensionArgument
 import net.quiltservertools.interdimensional.customGenerator
+import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.mixin.ChunkGeneratorAccessor
 
 object GeneratorCommand : Command {

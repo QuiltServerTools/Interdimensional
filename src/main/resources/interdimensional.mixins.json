@@ -5,7 +5,8 @@
   "mixins": [
     "ChunkGeneratorAccessor",
     "MixinChunkGenerator",
-    "MixinServerPlayerEntity"
+    "MixinServerPlayerEntity",
+    "NoiseChunkGeneratorAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
