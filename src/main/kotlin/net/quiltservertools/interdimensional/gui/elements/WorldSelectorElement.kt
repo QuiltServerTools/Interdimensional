@@ -32,26 +32,27 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
 
     private fun getItem(world: ServerWorld?): ItemStack {
         val path = world?.registryKey?.value?.path ?: ""
-        when (path) {
+        val stack = when (path) {
             "overworld" -> {
-                return ItemStack(Items.STONE).setCustomName(path.text())
+                ItemStack(Items.STONE)
             }
             "the_nether" -> {
-                return ItemStack(Items.NETHERRACK).setCustomName(path.text())
+                ItemStack(Items.NETHERRACK)
             }
             "the_end" -> {
-                return ItemStack(Items.END_STONE).setCustomName(path.text())
+                ItemStack(Items.END_STONE)
+            }
+            else -> {
+                ItemStack(Items.FILLED_MAP)
             }
         }
 
-        return ItemStack(Items.MOSS_BLOCK).setCustomName(path.text())
+        return stack.setCustomName(path.text())
     }
 
     override fun getItemStack(): ItemStack {
-        return ItemStack(Items.MAP)
+        return ItemStack(Items.MAP).setCustomName("World like - ${handler.maplike.registryKey.value.path}".text())
     }
-
-    override fun getName() = "World like"
 
     override fun createOptions() {
         handler.close()

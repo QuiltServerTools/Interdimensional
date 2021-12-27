@@ -14,13 +14,12 @@ interface LinkComponent {
     The stack shown to open the sub menu
      */
     fun getItemStack(): ItemStack
-    fun getName(): String
     fun createOptions()
     fun close()
     fun setResult(handler: CreateGuiHandler)
 
     fun createElement(): GuiElementInterface {
-        return GuiElement(getItemStack().setCustomName(getName().text())) {
+        return GuiElement(getItemStack().setCustomName(getItemStack().name)) {
                 index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface ->
             this.createOptions()
         }

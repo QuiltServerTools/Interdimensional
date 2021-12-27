@@ -1,7 +1,6 @@
 package net.quiltservertools.interdimensional.gui.elements
 
 import eu.pb4.sgui.api.gui.SimpleGui
-import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.screen.ScreenHandlerType
@@ -13,6 +12,7 @@ import net.quiltservertools.interdimensional.gui.biomeSource.BiomeSourceResult
 import net.quiltservertools.interdimensional.gui.biomeSource.EndResult
 import net.quiltservertools.interdimensional.gui.biomeSource.MultiNoiseResult
 import net.quiltservertools.interdimensional.gui.components.LinkComponent
+import net.quiltservertools.interdimensional.text
 
 class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
 
@@ -31,13 +31,10 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
             }
         }
     }
-    //todo fixed biome source
 
     override fun getItemStack(): ItemStack {
-        return ItemStack(Items.OAK_SAPLING)
+        return ItemStack(Items.OAK_SAPLING).setCustomName("Biome Source - ${handler.biomeSource}".text())
     }
-
-    override fun getName() = "Biome Source"
 
     override fun createOptions() {
         handler.close()

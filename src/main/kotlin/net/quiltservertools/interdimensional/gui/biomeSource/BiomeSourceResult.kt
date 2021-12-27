@@ -11,6 +11,10 @@ import net.quiltservertools.interdimensional.gui.elements.BiomeSourceElement
 abstract class BiomeSourceResult(private val element: BiomeSourceElement) : GuiElementInterface, GuiElementInterface.ClickCallback {
     abstract override fun getItemStack(): ItemStack
 
+    override fun getGuiCallback(): GuiElementInterface.ClickCallback {
+        return this
+    }
+
     override fun click(index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface?) {
         element.result = this
         element.setResult(element.handler)

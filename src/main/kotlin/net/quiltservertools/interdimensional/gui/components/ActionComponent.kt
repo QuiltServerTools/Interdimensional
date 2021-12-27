@@ -11,6 +11,10 @@ import net.quiltservertools.interdimensional.text
 class ActionComponent(private val item: Item, private val name: String, private val onClick: () -> Unit) : GuiElementInterface, GuiElementInterface.ClickCallback {
     override fun getItemStack(): ItemStack = ItemStack(item).setCustomName(name.text())
 
+    override fun getGuiCallback(): GuiElementInterface.ClickCallback {
+        return this
+    }
+
     override fun click(index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface?) {
         onClick.invoke()
     }

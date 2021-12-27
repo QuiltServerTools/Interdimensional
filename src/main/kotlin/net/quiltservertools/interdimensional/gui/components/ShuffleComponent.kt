@@ -8,7 +8,7 @@ import net.minecraft.screen.slot.SlotActionType
 import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.text
 
-abstract class ShuffleComponent<T : Option>(private val handler: CreateGuiHandler, val options: MutableList<T>)  {
+abstract class ShuffleComponent<T : Option>(val handler: CreateGuiHandler, val options: MutableList<T>)  {
 
     var index = 0
 

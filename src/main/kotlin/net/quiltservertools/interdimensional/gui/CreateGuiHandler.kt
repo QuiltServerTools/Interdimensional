@@ -8,13 +8,15 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.Difficulty
 import net.minecraft.world.biome.BuiltinBiomes
 import net.minecraft.world.biome.source.BiomeSource
 import net.minecraft.world.gen.chunk.*
 import net.quiltservertools.interdimensional.gui.components.ActionComponent
-import net.quiltservertools.interdimensional.gui.elements.BiomeSourceElement
-import net.quiltservertools.interdimensional.gui.elements.GeneratorTypeElement
-import net.quiltservertools.interdimensional.gui.elements.WorldSelectorElement
+import net.quiltservertools.interdimensional.gui.components.TextComponent
+import net.quiltservertools.interdimensional.gui.elements.*
+import net.quiltservertools.interdimensional.gui.options.DifficultyOption
+import net.quiltservertools.interdimensional.gui.options.GeneratorTypes
 import net.quiltservertools.interdimensional.mixin.NoiseChunkGeneratorAccessor
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager
 import xyz.nucleoid.fantasy.RuntimeWorldConfig
@@ -26,16 +28,28 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
     private val maplikeSelector = WorldSelectorElement(player.server.worlds, this)
     private val biomeSourceSelector = BiomeSourceElement(this)
 
-    lateinit var maplike: ServerWorld
-    lateinit var type: GeneratorTypes
-    lateinit var biomeSource: BiomeSource
-    var seed = player.getWorld().seed
+    var maplike: ServerWorld = player.getWorld()
+    var type: GeneratorTypes = GeneratorTypes.NOISE
+    var biomeSource: BiomeSource = player.getWorld().chunkManager.chunkGenerator.biomeSource
+    var seed: Long = player.getWorld().seed
+    var identifier: Identifier = Identifier(player.gameProfile.name)
+    var difficulty: Difficulty = Difficulty.NORMAL
 
     init {
         val generatorTypes = GeneratorTypes.values().toMutableList()
 
+        // World info
+        //fixme name does not update
         gui.addSlot(maplikeSelector.createElement())
-        // Add generator type selector
+        // Identifier
+        gui.addSlot(TextComponent("Identifier", Items.WARPED_SIGN, this, IdentifierInputGui(this)))
+        // Difficulty
+        DifficultySelectorElement(this, DifficultyOption.values().toMutableList())
+
+        // Generation
+        // Seed selector
+        gui.addSlot(TextComponent("Seed", Items.WHEAT_SEEDS, this, SeedInputGui(this)))
+        // Generator type selector
         GeneratorTypeElement(this, generatorTypes)
         // Biome source selector
         gui.addSlot(biomeSourceSelector.createElement())
@@ -51,8 +65,6 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
     }
 
     private fun submit() {
-        val identifier = Identifier("interdimensional", "")
-
         val biomeSource = biomeSourceSelector.result.biomeSource
         val structures = StructuresConfig(Optional.of(StructuresConfig.DEFAULT_STRONGHOLD), StructuresConfig.DEFAULT_STRUCTURES)
 
