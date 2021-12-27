@@ -9,7 +9,7 @@ import net.quiltservertools.interdimensional.text
 class SeedInputGui(handler: CreateGuiHandler) : TextComponent.TextInputGui(handler) {
     override fun getItemStack(icon: Item, displayName: String): ItemStack {
         if (handler.seed != 0L) {
-            return ItemStack(icon).setCustomName("$displayName - ${handler.seed}".text())
+            return ItemStack(icon).setCustomName("$displayName: ${handler.seed}".text())
         }
         return ItemStack(icon).setCustomName(displayName.text())
     }

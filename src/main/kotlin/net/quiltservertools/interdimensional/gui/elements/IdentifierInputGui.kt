@@ -16,6 +16,6 @@ class IdentifierInputGui(handler: CreateGuiHandler) : TextComponent.TextInputGui
     }
 
     override fun getItemStack(icon: Item, displayName: String): ItemStack {
-        return ItemStack(icon).setCustomName("$displayName - ${handler.identifier}".text())
+        return ItemStack(icon).setCustomName("$displayName: ${handler.identifier}".text())
     }
 }

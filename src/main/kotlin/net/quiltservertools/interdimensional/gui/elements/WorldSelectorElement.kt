@@ -51,7 +51,7 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
     }
 
     override fun getItemStack(): ItemStack {
-        return ItemStack(Items.MAP).setCustomName("World like - ${handler.maplike.registryKey.value.path}".text())
+        return ItemStack(Items.MAP).setCustomName("World like: ${handler.maplike.registryKey.value.path}".text())
     }
 
     override fun createOptions() {

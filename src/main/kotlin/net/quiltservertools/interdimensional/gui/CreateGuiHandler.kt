@@ -6,11 +6,13 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.Difficulty
 import net.minecraft.world.biome.BuiltinBiomes
 import net.minecraft.world.biome.source.BiomeSource
+import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.gen.chunk.*
 import net.quiltservertools.interdimensional.gui.components.ActionComponent
 import net.quiltservertools.interdimensional.gui.components.TextComponent
@@ -34,6 +36,7 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
     var seed: Long = player.getWorld().seed
     var identifier: Identifier = Identifier(player.gameProfile.name)
     var difficulty: Difficulty = Difficulty.NORMAL
+    var generatorSettings: ChunkGeneratorSettings = BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.get(ChunkGeneratorSettings.OVERWORLD)?: ChunkGeneratorSettings.getInstance()
 
     init {
         val generatorTypes = GeneratorTypes.values().toMutableList()
@@ -53,6 +56,8 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
         GeneratorTypeElement(this, generatorTypes)
         // Biome source selector
         gui.addSlot(biomeSourceSelector.createElement())
+        // Generator settings
+        ChunkGeneratorSettingsElement(this)
 
         // Bottom row
         gui.setSlot(18, ActionComponent(Items.LIME_CONCRETE, "Submit") { submit() })
@@ -72,7 +77,7 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
             GeneratorTypes.NOISE -> {
                 NoiseChunkGenerator(
                     (maplike.chunkManager.chunkGenerator as NoiseChunkGeneratorAccessor).noiseParameters, biomeSource, seed
-                ) { ChunkGeneratorSettings.getInstance() }
+                ) { generatorSettings }
             }
             GeneratorTypes.FLAT -> {
                 //todo biome logic

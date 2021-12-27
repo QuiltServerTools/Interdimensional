@@ -33,7 +33,7 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
     }
 
     override fun getItemStack(): ItemStack {
-        return ItemStack(Items.OAK_SAPLING).setCustomName("Biome Source - ${handler.biomeSource}".text())
+        return ItemStack(Items.OAK_SAPLING).setCustomName("Biome Source: ${handler.biomeSource}".text())
     }
 
     override fun createOptions() {

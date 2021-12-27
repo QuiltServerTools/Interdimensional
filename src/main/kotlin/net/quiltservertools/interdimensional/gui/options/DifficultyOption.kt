@@ -14,5 +14,5 @@ enum class DifficultyOption(val type: String, private val icon: Item, val diffic
 
     override fun getItemStack() = ItemStack(icon)
 
-    override fun getDisplayName() = type
+    override fun getDisplayName() = "Difficulty: $type"
 }
