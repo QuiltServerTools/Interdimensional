@@ -11,7 +11,7 @@ import net.quiltservertools.interdimensional.text
 
 class MultiNoiseResult(private val displayName: String, private val element: BiomeSourceElement, private val nether: Boolean, private val worldLike: ServerWorld) : BiomeSourceResult(element) {
     override fun getItemStack(): ItemStack {
-        return ItemStack(Blocks.FLOWERING_AZALEA.asItem()).setCustomName(("$displayName biome source").text())
+        return ItemStack(Blocks.OAK_SAPLING.asItem()).setCustomName(("$displayName biome source").text())
     }
 
     override val biomeSource: BiomeSource

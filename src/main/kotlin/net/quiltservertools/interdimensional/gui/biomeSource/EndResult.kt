@@ -10,7 +10,7 @@ import net.quiltservertools.interdimensional.text
 
 class EndResult(element: BiomeSourceElement, world: ServerWorld) : BiomeSourceResult(element) {
     override fun getItemStack(): ItemStack {
-        return ItemStack(Items.END_STONE).setCustomName("End biome source".text())
+        return ItemStack(Items.CHORUS_FLOWER).setCustomName("End biome source".text())
     }
 
     override val biomeSource = TheEndBiomeSource(world.registryManager.get(Registry.BIOME_KEY), element.handler.seed)

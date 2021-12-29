@@ -10,8 +10,10 @@ import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.Difficulty
+import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.biome.BuiltinBiomes
 import net.minecraft.world.biome.source.BiomeSource
+import net.minecraft.world.biome.source.FixedBiomeSource
 import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.gen.chunk.*
 import net.quiltservertools.interdimensional.gui.components.ActionComponent
@@ -36,7 +38,9 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
     var seed: Long = player.getWorld().seed
     var identifier: Identifier = Identifier(player.gameProfile.name)
     var difficulty: Difficulty = Difficulty.NORMAL
-    var generatorSettings: ChunkGeneratorSettings = BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.get(ChunkGeneratorSettings.OVERWORLD)?: ChunkGeneratorSettings.getInstance()
+    var generatorSettings: ChunkGeneratorSettings =
+        BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.get(ChunkGeneratorSettings.OVERWORLD)
+            ?: ChunkGeneratorSettings.getInstance()
 
     init {
         val generatorTypes = GeneratorTypes.values().toMutableList()
@@ -71,21 +75,27 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
 
     private fun submit() {
         val biomeSource = biomeSourceSelector.result.biomeSource
-        val structures = StructuresConfig(Optional.of(StructuresConfig.DEFAULT_STRONGHOLD), StructuresConfig.DEFAULT_STRUCTURES)
+        val structures =
+            StructuresConfig(Optional.of(StructuresConfig.DEFAULT_STRONGHOLD), StructuresConfig.DEFAULT_STRUCTURES)
 
         val generator = when (type) {
             GeneratorTypes.NOISE -> {
                 NoiseChunkGenerator(
-                    (maplike.chunkManager.chunkGenerator as NoiseChunkGeneratorAccessor).noiseParameters, biomeSource, seed
+                    (maplike.chunkManager.chunkGenerator as NoiseChunkGeneratorAccessor).noiseParameters,
+                    biomeSource,
+                    seed
                 ) { generatorSettings }
             }
             GeneratorTypes.FLAT -> {
-                //todo biome logic
-                FlatChunkGenerator(FlatChunkGeneratorConfig(structures, player.server.registryManager.get(
-                    RegistryKey.ofRegistry(Registry.BIOME_KEY.value))))
+                val config = FlatChunkGeneratorConfig.getDefaultConfig(player.server.registryManager.get(Registry.BIOME_KEY))
+                config.withStructuresConfig(structures)
+                config.setBiome {
+                    return@setBiome biomeSource.biomes.first()
+                }
+                FlatChunkGenerator(config)
             }
             GeneratorTypes.VOID -> {
-                VoidChunkGenerator { BuiltinBiomes.THE_VOID }
+                VoidChunkGenerator(player.server.registryManager.get(Registry.BIOME_KEY))
             }
         }
 
