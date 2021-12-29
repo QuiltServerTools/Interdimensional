@@ -25,7 +25,7 @@ class TextComponent(private val displayName: String, private val icon: Item, pri
         anvilGui.open()
     }
 
-    abstract class TextInputGui(val handler: CreateGuiHandler) : AnvilInputGui(handler.player, false) {
+    abstract class TextInputGui(player: ServerPlayerEntity) : AnvilInputGui(player, false) {
         init {
             this.setSlot(2, ActionComponent(Items.LIME_CONCRETE, "Submit") {
                 this.close()

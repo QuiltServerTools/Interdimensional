@@ -16,6 +16,7 @@ import net.quiltservertools.interdimensional.gui.biomeSource.BiomeSourceResult
 import net.quiltservertools.interdimensional.gui.biomeSource.EndResult
 import net.quiltservertools.interdimensional.gui.biomeSource.MultiNoiseResult
 import net.quiltservertools.interdimensional.gui.biomeSource.SingleBiomeResult
+import net.quiltservertools.interdimensional.gui.components.ActionComponent
 import net.quiltservertools.interdimensional.gui.components.LinkComponent
 import net.quiltservertools.interdimensional.text
 
@@ -31,13 +32,18 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
             val source = it.chunkManager.chunkGenerator.biomeSource
             val identifier = it.registryKey.value
             if (source is MultiNoiseBiomeSource) {
-                val noiseResult = MultiNoiseResult(identifier.path, this, identifier.equals(Identifier("the_nether")), it)
+                val noiseResult =
+                    MultiNoiseResult(identifier.path, this, identifier.equals(Identifier("the_nether")), it)
                 gui.addSlot(noiseResult)
             } else if (source is TheEndBiomeSource) {
                 gui.addSlot(EndResult(this, it))
             }
         }
+
         result = gui.getSlot(0) as BiomeSourceResult
+
+        gui.setSlot(45, ActionComponent(Items.OAK_SIGN, "Single Biome Source") { BiomeIdentifierInputGui(this).open() })
+        gui.setSlot(53, ActionComponent(Items.RED_CONCRETE, "Return") { close() })
     }
 
     override fun getItemStack(): ItemStack {

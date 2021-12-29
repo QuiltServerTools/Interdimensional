@@ -6,7 +6,7 @@ import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.gui.components.TextComponent
 import net.quiltservertools.interdimensional.text
 
-class SeedInputGui(handler: CreateGuiHandler) : TextComponent.TextInputGui(handler) {
+class SeedInputGui(val handler: CreateGuiHandler) : TextComponent.TextInputGui(handler.player) {
     override fun getItemStack(icon: Item, displayName: String): ItemStack {
         if (handler.seed != 0L) {
             return ItemStack(icon).setCustomName("$displayName: ${handler.seed}".text())

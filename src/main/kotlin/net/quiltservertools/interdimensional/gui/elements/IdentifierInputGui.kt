@@ -7,7 +7,7 @@ import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.gui.components.TextComponent
 import net.quiltservertools.interdimensional.text
 
-class IdentifierInputGui(handler: CreateGuiHandler) : TextComponent.TextInputGui(handler) {
+class IdentifierInputGui(val handler: CreateGuiHandler) : TextComponent.TextInputGui(handler.player) {
     override fun onClose() {
         if (this.input.isNotEmpty()) {
             handler.identifier = Identifier(this.input)
