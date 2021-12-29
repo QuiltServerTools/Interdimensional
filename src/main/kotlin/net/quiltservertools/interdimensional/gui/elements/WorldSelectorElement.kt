@@ -20,6 +20,7 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
 
     private val gui = SimpleGui(ScreenHandlerType.GENERIC_9X1, handler.player, false)
     private var result: ServerWorld? = null
+    private var handlerSlotIndex: Int = 0
 
     init {
         worlds.forEach {
@@ -54,13 +55,15 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
         return ItemStack(Items.MAP).setCustomName("World like: ${handler.maplike.registryKey.value.path}".text())
     }
 
-    override fun createOptions() {
+    override fun createOptions(index: Int) {
         handler.close()
+        this.handlerSlotIndex = index
         gui.open()
     }
 
     override fun setResult(handler: CreateGuiHandler) {
         handler.maplike = this.result ?: handler.player.getWorld()
+        handler.gui.setSlot(handlerSlotIndex, this.createElement())
     }
 
     override fun close() {
@@ -72,6 +75,7 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
         GuiElementInterface.ClickCallback {
         override fun click(index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface) {
             component.result = world
+            component.setResult(component.handler)
             component.close()
         }
     }

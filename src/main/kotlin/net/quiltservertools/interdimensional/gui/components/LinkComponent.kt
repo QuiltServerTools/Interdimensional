@@ -14,14 +14,17 @@ interface LinkComponent {
     The stack shown to open the sub menu
      */
     fun getItemStack(): ItemStack
-    fun createOptions()
+    /*
+    index: The slot index of the component in the handler GUI
+     */
+    fun createOptions(index: Int)
     fun close()
     fun setResult(handler: CreateGuiHandler)
 
     fun createElement(): GuiElementInterface {
         return GuiElement(getItemStack().setCustomName(getItemStack().name)) {
                 index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface ->
-            this.createOptions()
+            this.createOptions(index)
         }
     }
 }

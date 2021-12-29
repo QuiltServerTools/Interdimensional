@@ -46,7 +46,6 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
         val generatorTypes = GeneratorTypes.values().toMutableList()
 
         // World info
-        //fixme name does not update
         gui.addSlot(maplikeSelector.createElement())
         // Identifier
         gui.addSlot(TextComponent("Identifier", Items.WARPED_SIGN, this, IdentifierInputGui(this)))

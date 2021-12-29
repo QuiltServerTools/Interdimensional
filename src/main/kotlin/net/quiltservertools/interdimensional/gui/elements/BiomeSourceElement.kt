@@ -25,6 +25,7 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
     val gui = SimpleGui(ScreenHandlerType.GENERIC_9X6, handler.player, false)
     var result: BiomeSourceResult
     var registry: Registry<Biome> = handler.player.server.registryManager.get(Registry.BIOME_KEY)
+    private var handlerSlotIndex: Int = 0
 
     init {
         handler.player.server.worlds.forEach {
@@ -50,8 +51,9 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
         return ItemStack(Items.OAK_SAPLING).setCustomName("Biome Source: ${handler.biomeSource}".text())
     }
 
-    override fun createOptions() {
+    override fun createOptions(index: Int) {
         handler.close()
+        this.handlerSlotIndex = index
         gui.open()
     }
 
@@ -62,9 +64,6 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
 
     override fun setResult(handler: CreateGuiHandler) {
         handler.biomeSource = result.biomeSource
-    }
-
-    private fun getBiome(key: RegistryKey<Biome>): Biome {
-        return registry.get(key)!!
+        handler.gui.setSlot(this.handlerSlotIndex, this.createElement())
     }
 }
