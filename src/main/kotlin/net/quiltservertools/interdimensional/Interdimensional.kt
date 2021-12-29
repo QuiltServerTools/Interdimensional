@@ -46,7 +46,6 @@ object Interdimensional : ModInitializer {
         dispatcher.root.addChild(root)
         root.addChild(CreateCommand.register())
         root.addChild(DeleteCommand.register())
-        root.addChild(GeneratorCommand.register())
         root.addChild(PortalCommand.register())
     }
 
