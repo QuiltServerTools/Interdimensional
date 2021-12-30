@@ -31,26 +31,6 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
         }
     }
 
-    private fun getItem(world: ServerWorld?): ItemStack {
-        val path = world?.registryKey?.value?.path ?: ""
-        val stack = when (path) {
-            "overworld" -> {
-                ItemStack(Items.STONE)
-            }
-            "the_nether" -> {
-                ItemStack(Items.NETHERRACK)
-            }
-            "the_end" -> {
-                ItemStack(Items.END_STONE)
-            }
-            else -> {
-                ItemStack(Items.FILLED_MAP)
-            }
-        }
-
-        return stack.setCustomName(path.text())
-    }
-
     override fun getItemStack(): ItemStack {
         return ItemStack(Items.MAP).setCustomName("World like: ${handler.maplike.registryKey.value.path}".text())
     }
@@ -77,6 +57,28 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
             component.result = world
             component.setResult(component.handler)
             component.close()
+        }
+    }
+
+    companion object {
+        fun getItem(world: ServerWorld?): ItemStack {
+            val path = world?.registryKey?.value?.path ?: ""
+            val stack = when (path) {
+                "overworld" -> {
+                    ItemStack(Items.STONE)
+                }
+                "the_nether" -> {
+                    ItemStack(Items.NETHERRACK)
+                }
+                "the_end" -> {
+                    ItemStack(Items.END_STONE)
+                }
+                else -> {
+                    ItemStack(Items.FILLED_MAP)
+                }
+            }
+
+            return stack.setCustomName(path.text())
         }
     }
 }

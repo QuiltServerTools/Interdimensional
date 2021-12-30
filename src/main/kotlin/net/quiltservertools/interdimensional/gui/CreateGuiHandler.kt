@@ -21,6 +21,8 @@ import net.quiltservertools.interdimensional.gui.components.TextComponent
 import net.quiltservertools.interdimensional.gui.elements.*
 import net.quiltservertools.interdimensional.gui.options.DifficultyOption
 import net.quiltservertools.interdimensional.gui.options.GeneratorTypes
+import net.quiltservertools.interdimensional.mixin.ChunkGeneratorSettingsAccessor
+import net.quiltservertools.interdimensional.mixin.ChunkGeneratorSettingsMixin
 import net.quiltservertools.interdimensional.mixin.NoiseChunkGeneratorAccessor
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager
 import xyz.nucleoid.fantasy.RuntimeWorldConfig
@@ -41,6 +43,7 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
     var generatorSettings: ChunkGeneratorSettings =
         BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.get(ChunkGeneratorSettings.OVERWORLD)
             ?: ChunkGeneratorSettings.getInstance()
+    var structuresConfig: Optional<StructuresConfig> = Optional.empty()
 
     init {
         val generatorTypes = GeneratorTypes.values().toMutableList()
@@ -62,6 +65,10 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
         // Generator settings
         ChunkGeneratorSettingsElement(this)
 
+        // Structures config
+        StructureSelectorElement(this)
+        StrongholdEnableComponent(this)
+
         // Bottom row
         gui.setSlot(18, ActionComponent(Items.LIME_CONCRETE, "Submit") { submit() })
         gui.setSlot(26, ActionComponent(Items.RED_CONCRETE, "Close") { close() })
@@ -72,13 +79,15 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
         gui.open()
     }
 
+    @Suppress("CAST_NEVER_SUCCEEDS")
     private fun submit() {
         val biomeSource = biomeSourceSelector.result.biomeSource
-        val structures =
-            StructuresConfig(Optional.of(StructuresConfig.DEFAULT_STRONGHOLD), StructuresConfig.DEFAULT_STRUCTURES)
 
         val generator = when (type) {
             GeneratorTypes.NOISE -> {
+                if (structuresConfig.isPresent) {
+                    (generatorSettings as ChunkGeneratorSettingsAccessor).setStructuresConfig(structuresConfig.get())
+                }
                 NoiseChunkGenerator(
                     (maplike.chunkManager.chunkGenerator as NoiseChunkGeneratorAccessor).noiseParameters,
                     biomeSource,
@@ -87,7 +96,9 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
             }
             GeneratorTypes.FLAT -> {
                 val config = FlatChunkGeneratorConfig.getDefaultConfig(player.server.registryManager.get(Registry.BIOME_KEY))
-                config.withStructuresConfig(structures)
+                if (structuresConfig.isPresent) {
+                    config.withStructuresConfig(structuresConfig.get())
+                }
                 config.setBiome {
                     return@setBiome biomeSource.biomes.first()
                 }
