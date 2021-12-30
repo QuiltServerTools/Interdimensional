@@ -125,7 +125,7 @@ object PortalCommand : Command {
     }
 
     private fun remove(source: ServerCommandSource, name: String): Int {
-        PortalManager.portals.removeIf { it.name == name }
+        PortalManager.removePortal(name)
         source.sendFeedback("Removed portal $name".success(), false)
         return 1
     }

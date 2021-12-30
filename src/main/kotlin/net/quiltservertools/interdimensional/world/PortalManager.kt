@@ -6,6 +6,7 @@ import net.quiltservertools.interdimensional.portals.api.CustomPortalBuilder
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource.ItemUseSource
 
 object PortalManager {
@@ -94,5 +95,11 @@ object PortalManager {
 
         builder.registerPortal()
         portals.add(portal)
+    }
+
+    fun removePortal(name: String) {
+        val portal = this.portals.first { it.name == name }
+        this.portals.remove(portal)
+        CustomPortalApiRegistry.removePortal(portal.frameBlock)
     }
 }
