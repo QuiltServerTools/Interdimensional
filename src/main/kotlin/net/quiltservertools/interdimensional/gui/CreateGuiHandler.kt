@@ -8,22 +8,18 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.Difficulty
-import net.minecraft.world.biome.BiomeKeys
-import net.minecraft.world.biome.BuiltinBiomes
 import net.minecraft.world.biome.source.BiomeSource
-import net.minecraft.world.biome.source.FixedBiomeSource
-import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.gen.chunk.*
+import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import net.quiltservertools.interdimensional.gui.components.ActionComponent
 import net.quiltservertools.interdimensional.gui.components.TextComponent
 import net.quiltservertools.interdimensional.gui.elements.*
 import net.quiltservertools.interdimensional.gui.options.DifficultyOption
 import net.quiltservertools.interdimensional.gui.options.GeneratorTypes
 import net.quiltservertools.interdimensional.mixin.ChunkGeneratorSettingsAccessor
-import net.quiltservertools.interdimensional.mixin.ChunkGeneratorSettingsMixin
 import net.quiltservertools.interdimensional.mixin.NoiseChunkGeneratorAccessor
+import net.quiltservertools.interdimensional.text
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager
 import xyz.nucleoid.fantasy.RuntimeWorldConfig
 import xyz.nucleoid.fantasy.util.VoidChunkGenerator
@@ -72,6 +68,8 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
         // Bottom row
         gui.setSlot(18, ActionComponent(Items.LIME_CONCRETE, "Submit") { submit() })
         gui.setSlot(26, ActionComponent(Items.RED_CONCRETE, "Close") { close() })
+
+        gui.title = "Create".text()
         open()
     }
 
@@ -116,6 +114,8 @@ class CreateGuiHandler(val player: ServerPlayerEntity) {
         config.seed = seed
 
         RuntimeWorldManager.add(config, identifier)
+
+        player.sendMessage("Created dimension $identifier".success(), false)
 
         close()
     }

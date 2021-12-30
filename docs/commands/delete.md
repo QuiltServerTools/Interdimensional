@@ -4,13 +4,13 @@ Command for deleting worlds made by Interdimensional
 
 Permission Node: `interdimensional.command.delete`
 
-Fallback: Permission Level 4
+Fallback: Permission Level 3
 
 ## Arguments
 
-`/dim delete <dimension>`
+`/dim delete`
 
-`dimension`: Identifier. Identifier of the custom dimension being deleted
+This will open a [Delete GUI](../guis/delete.md), where you can make the selection of the world to be deleted
 
 ## World recovery
 

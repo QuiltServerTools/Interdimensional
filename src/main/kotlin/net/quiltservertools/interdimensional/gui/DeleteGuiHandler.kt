@@ -9,6 +9,7 @@ import net.quiltservertools.interdimensional.command.InterdimensionalCommand.err
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import net.quiltservertools.interdimensional.gui.components.ActionComponent
 import net.quiltservertools.interdimensional.gui.elements.WorldDeleteElement
+import net.quiltservertools.interdimensional.text
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager
 
 class DeleteGuiHandler(val player: ServerPlayerEntity) {
@@ -22,6 +23,8 @@ class DeleteGuiHandler(val player: ServerPlayerEntity) {
         // Bottom row
         gui.setSlot(18, ActionComponent(Items.LIME_CONCRETE, "Submit") { submit() })
         gui.setSlot(26, ActionComponent(Items.RED_CONCRETE, "Close") { close() })
+
+        gui.title = "Delete".text()
         open()
     }
     fun open() {

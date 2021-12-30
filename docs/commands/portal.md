@@ -12,7 +12,21 @@
 
 `frame_block`: The block used in the frame of the portal
 
-`options`: Additional options for portal creation. See [Portal Options Argument Type](../arguments/portal_options_argument_type.md)
+`options`: Additional options for portal creation. See [Options](#Options)
+
+### Options
+
+#### Syntax
+
+This argument takes a series of properties in the format below:
+
+`property:my_value key:value`
+
+#### Properties
+
+`color`: Formatting - Color of the portal for when a compatible client mod is used
+
+`source_world`: Identifier - the world that the portal is initially lit from. Defaults to overworld
 
 ## Remove
 
