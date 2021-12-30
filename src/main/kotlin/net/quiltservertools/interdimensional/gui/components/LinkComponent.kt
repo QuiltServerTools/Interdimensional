@@ -19,10 +19,12 @@ interface LinkComponent {
      */
     fun createOptions(index: Int)
     fun close()
-    fun setResult(handler: CreateGuiHandler)
+    fun setResult(handler: CreateGuiHandler) {
+
+    }
 
     fun createElement(): GuiElementInterface {
-        return GuiElement(getItemStack().setCustomName(getItemStack().name)) {
+        return GuiElement(getItemStack()) {
                 index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface ->
             this.createOptions(index)
         }

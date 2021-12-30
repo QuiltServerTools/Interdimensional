@@ -18,7 +18,7 @@ object RuntimeWorldManager {
 
     fun remove(handle: RuntimeWorldHandle) {
         runtimeDimensionHandlers.remove(handle)
-        Interdimensional.LOGGER.info("Removed dimension" + handle.asWorld().registryKey.value)
+        Interdimensional.LOGGER.info("Removed dimension${handle.asWorld().registryKey.value}")
         handle.delete()
     }
 
@@ -44,9 +44,9 @@ object RuntimeWorldManager {
     }
 
     fun getHandle(identifier: Identifier): RuntimeWorldHandle {
-        val result = runtimeDimensionHandlers.stream().filter { h: RuntimeWorldHandle ->
+        val result = runtimeDimensionHandlers.first { h: RuntimeWorldHandle ->
             h.asWorld().registryKey.value == identifier
-        }.findFirst()
-        return result.orElse(null)
+        }
+        return result
     }
 }
