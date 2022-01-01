@@ -6,6 +6,6 @@ import net.quiltservertools.interdimensional.gui.components.ShuffleComponent
 
 class GeneratorTypeElement(handler: CreateGuiHandler, options: MutableList<GeneratorTypes>) : ShuffleComponent<GeneratorTypes>(handler, options) {
     override fun setResult() {
-        handler.type = options[this.index]
+        handler.genType = options[this.index]
     }
 }

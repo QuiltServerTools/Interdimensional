@@ -9,11 +9,9 @@ import net.minecraft.item.Items
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.registry.Registry
 import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.gui.components.LinkComponent
 import net.quiltservertools.interdimensional.text
-import java.util.*
 
 class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: CreateGuiHandler) :
     LinkComponent {
@@ -43,7 +41,7 @@ class WorldSelectorElement(worlds: Iterable<ServerWorld>, private val handler: C
 
     override fun setResult(handler: CreateGuiHandler) {
         handler.maplike = this.result ?: handler.player.getWorld()
-        handler.gui.setSlot(handlerSlotIndex, this.createElement())
+        handler.setSlot(handlerSlotIndex, this.createElement())
     }
 
     override fun close() {

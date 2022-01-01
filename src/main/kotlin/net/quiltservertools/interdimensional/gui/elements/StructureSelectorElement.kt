@@ -31,7 +31,7 @@ class StructureSelectorElement(val handler: CreateGuiHandler) : LinkComponent {
         }
         gui.addSlot(ItemStack(Items.RED_CONCRETE).setCustomName("Disabled".text()), ComponentCallback(null, this))
         setResult(handler)
-        handler.gui.addSlot(this.createElement())
+        handler.addSlot(this.createElement())
     }
 
     override fun getItemStack(): ItemStack {
@@ -46,7 +46,7 @@ class StructureSelectorElement(val handler: CreateGuiHandler) : LinkComponent {
 
     override fun close() {
         gui.close()
-        handler.gui.setSlot(this.handlerSlotIndex, this.createElement())
+        handler.setSlot(this.handlerSlotIndex, this.createElement())
         handler.open()
     }
 

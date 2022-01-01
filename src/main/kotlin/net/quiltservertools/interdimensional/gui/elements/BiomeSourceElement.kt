@@ -6,16 +6,13 @@ import net.minecraft.item.Items
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource
 import net.minecraft.world.biome.source.TheEndBiomeSource
 import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.gui.biomeSource.BiomeSourceResult
 import net.quiltservertools.interdimensional.gui.biomeSource.EndResult
 import net.quiltservertools.interdimensional.gui.biomeSource.MultiNoiseResult
-import net.quiltservertools.interdimensional.gui.biomeSource.SingleBiomeResult
 import net.quiltservertools.interdimensional.gui.components.ActionComponent
 import net.quiltservertools.interdimensional.gui.components.LinkComponent
 import net.quiltservertools.interdimensional.text
@@ -64,6 +61,6 @@ class BiomeSourceElement(val handler: CreateGuiHandler) : LinkComponent {
 
     override fun setResult(handler: CreateGuiHandler) {
         handler.biomeSource = result.biomeSource
-        handler.gui.setSlot(this.handlerSlotIndex, this.createElement())
+        handler.setSlot(this.handlerSlotIndex, this.createElement())
     }
 }

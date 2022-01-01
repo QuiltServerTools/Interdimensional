@@ -48,7 +48,7 @@ class WorldDeleteElement(worlds: Iterable<ServerWorld>, val handler: DeleteGuiHa
         GuiElementInterface.ClickCallback {
         override fun click(index: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface) {
             element.handler.identifier = world.registryKey.value
-            element.handler.gui.setSlot(element.handlerSlotIndex, element.createElement())
+            element.handler.setSlot(element.handlerSlotIndex, element.createElement())
             element.close()
         }
     }

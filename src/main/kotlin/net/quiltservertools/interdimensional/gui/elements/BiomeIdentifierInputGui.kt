@@ -14,10 +14,16 @@ class BiomeIdentifierInputGui(private val element: BiomeSourceElement) : TextCom
     }
 
     override fun close() {
-        element.result = SingleBiomeResult(element, element.handler.player.server.registryManager.get(Registry.BIOME_KEY).get(
-            Identifier(this.input)
-        )?: BuiltinBiomes.PLAINS)
-        super.close()
-        element.handler.open()
+        if (this.input.isNotEmpty() && Identifier.isValid(input)) {
+            element.result = SingleBiomeResult(
+                element, element.handler.player.server.registryManager.get(Registry.BIOME_KEY).get(
+                    Identifier(this.input)
+                ) ?: BuiltinBiomes.PLAINS
+            )
+            super.close()
+            element.handler.open()
+        } else {
+            this.open()
+        }
     }
 }

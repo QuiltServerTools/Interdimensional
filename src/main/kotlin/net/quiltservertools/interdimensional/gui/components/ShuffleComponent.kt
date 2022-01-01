@@ -13,11 +13,11 @@ abstract class ShuffleComponent<T : Option>(val handler: CreateGuiHandler, val o
     var index = 0
 
     init {
-        handler.gui.addSlot(createElement(options.first()))
+        handler.addSlot(createElement(options.first()))
     }
 
     private fun showNext(slotIndex: Int) {
-        handler.gui.setSlot(slotIndex, createElement(options[index]))
+        handler.setSlot(slotIndex, createElement(options[index]))
     }
 
     private fun createElement(option: Option): GuiElementInterface {
