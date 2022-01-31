@@ -28,6 +28,8 @@ This argument takes a series of properties in the format below:
 
 `source_world`: Identifier - the world that the portal is initially lit from. Defaults to overworld
 
+`permissions`: Int - the fallback permission level to use for accessing the portal. Defaults to 0
+
 ## Remove
 
 `/dim portal remove <name>`

@@ -1,5 +1,6 @@
 package net.quiltservertools.interdimensional.portals.util;
 
+import net.minecraft.server.command.ServerCommandSource;
 import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.PortalBlock;
@@ -11,6 +12,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class PortalLink {
     public Identifier block;
@@ -22,6 +24,7 @@ public class PortalLink {
     public int colorID;
     public int forcedWidth, forcedHeight;
     public Identifier portalFrameTester = InterdimensionalPortals.VANILLA_NETHERPORTAL_FRAMETESTER;
+    public Predicate<ServerCommandSource> permission = (scs) -> true;
 
     public PortalLink() {
 
@@ -29,12 +32,6 @@ public class PortalLink {
 
     private Function<Entity, SHOULDTP> beforeTPEvent;
     private Consumer<Entity> postTPEvent;
-
-    public PortalLink(Identifier blockID, Identifier dimID, int colorID) {
-        this.block = blockID;
-        this.dimID = dimID;
-        this.colorID = colorID;
-    }
 
     public Block getPortalBlock() {
         return portalBlock;

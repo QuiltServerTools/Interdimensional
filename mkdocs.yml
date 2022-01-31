@@ -5,6 +5,7 @@ repo_name: QuiltServerTools/Interdimensional
 
 nav:
   - index.md
+  - portals.md
   - Commands:
       - commands/root.md
       - commands/create.md

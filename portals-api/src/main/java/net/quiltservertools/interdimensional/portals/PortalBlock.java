@@ -48,7 +48,7 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
     public BlockState getPolymerBlockState(BlockState state) {
         return Blocks.NETHER_PORTAL.getDefaultState().with(NetherPortalBlock.AXIS, state.get(PortalBlock.AXIS));
     }
-    
+
     @Override
     public BlockState getPolymerBlockState(ServerPlayerEntity player, BlockState state) {
         return NetworkManager.isVanilla(player)
@@ -101,12 +101,19 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(getPortalBase(world, pos));
         if (!entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
+
             EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
             entityInPortal.increaseCooldown();
+
             if (!entityInPortal.hasTeleported()) {
                 entityInPortal.setInPortal(true);
                 if (entityInPortal.getTimeInPortal() >= (entity.isInvulnerable() ? entity.getMaxNetherPortalTime() + entity.getDefaultNetherPortalCooldown() : entity.getMaxNetherPortalTime())) {
+                    if (link.permission != null && !link.permission.test(entity.getCommandSource())) {
+                        // Entity does not have permissions to enter
+                        return;
+                    }
                     entityInPortal.setDidTP(true);
                     if (!world.isClient) {
                         CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
@@ -115,6 +122,7 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
                     }
                 }
             }
+
         } else {
             if (ClientManager.getInstance().contains(pos)) {
                 ((ClientPlayerInColoredPortal) MinecraftClient.getInstance().player).setLastUsedPortalColor(ClientManager.getInstance().getColorAtPosition(pos));
@@ -129,23 +137,23 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(100) == 0) {
-            world.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
+            world.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
 
-        for(int i = 0; i < 4; ++i) {
-            double d = (double)pos.getX() + random.nextDouble();
-            double e = (double)pos.getY() + random.nextDouble();
-            double f = (double)pos.getZ() + random.nextDouble();
-            double g = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            double h = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            double j = ((double)random.nextFloat() - 0.5D) * 0.5D;
+        for (int i = 0; i < 4; ++i) {
+            double d = (double) pos.getX() + random.nextDouble();
+            double e = (double) pos.getY() + random.nextDouble();
+            double f = (double) pos.getZ() + random.nextDouble();
+            double g = ((double) random.nextFloat() - 0.5D) * 0.5D;
+            double h = ((double) random.nextFloat() - 0.5D) * 0.5D;
+            double j = ((double) random.nextFloat() - 0.5D) * 0.5D;
             int k = random.nextInt(2) * 2 - 1;
             if (!world.getBlockState(pos.west()).isOf(this) && !world.getBlockState(pos.east()).isOf(this)) {
-                d = (double)pos.getX() + 0.5D + 0.25D * (double)k;
-                g = random.nextFloat() * 2.0F * (float)k;
+                d = (double) pos.getX() + 0.5D + 0.25D * (double) k;
+                g = random.nextFloat() * 2.0F * (float) k;
             } else {
-                f = (double)pos.getZ() + 0.5D + 0.25D * (double)k;
-                j = random.nextFloat() * 2.0F * (float)k;
+                f = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
+                j = random.nextFloat() * 2.0F * (float) k;
             }
 
             world.addParticle(new BlockStateParticleEffect(InterdimensionalPortalsClient.CUSTOMPORTALPARTICLE, state), d, e, f, g, h, j);

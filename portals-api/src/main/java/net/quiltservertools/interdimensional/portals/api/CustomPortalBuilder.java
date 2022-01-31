@@ -1,5 +1,6 @@
 package net.quiltservertools.interdimensional.portals.api;
 
+import net.minecraft.server.command.ServerCommandSource;
 import net.quiltservertools.interdimensional.portals.CustomPortalApiRegistry;
 import net.quiltservertools.interdimensional.portals.InterdimensionalPortals;
 import net.quiltservertools.interdimensional.portals.PortalBlock;
@@ -16,6 +17,7 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class CustomPortalBuilder {
     PortalLink portalLink;
@@ -185,6 +187,11 @@ public class CustomPortalBuilder {
 
     public CustomPortalBuilder registerPostTPEvent(Consumer<Entity> event) {
         portalLink.setPostTPEvent(event);
+        return this;
+    }
+
+    public CustomPortalBuilder setPermission(Predicate<ServerCommandSource> permission) {
+        portalLink.permission = permission;
         return this;
     }
 }

@@ -87,22 +87,29 @@ object PortalCommand : Command {
             source.server.overworld.registryKey.value
         }
 
+        val permission = if (props.containsKey("permission")) {
+            0
+        } else {
+            props["permission"] as Int
+        }
+
         if (props.containsKey("color")) {
             val color = props["color"] as Formatting
-            val rgb: FloatArray = ColorUtil.getColorForBlock(color.colorValue?: 0)
-                PortalManager.addPortal(
-                    Portal(
-                        name,
-                        blockState.blockState.block,
-                        destination,
-                        sourceWorld,
-                        (rgb[0] * 255).toInt().toUByte(),
-                        (rgb[1] * 255).toInt().toUByte(),
-                        (rgb[2] * 255).toInt().toUByte(),
-                        flat,
-                        ignitionSource
-                    )
+            val rgb: FloatArray = ColorUtil.getColorForBlock(color.colorValue ?: 0)
+            PortalManager.addPortal(
+                Portal(
+                    name,
+                    blockState.blockState.block,
+                    destination,
+                    sourceWorld,
+                    (rgb[0] * 255).toInt(),
+                    (rgb[1] * 255).toInt(),
+                    (rgb[2] * 255).toInt(),
+                    flat,
+                    ignitionSource,
+                    permission
                 )
+            )
         } else {
             PortalManager.addPortal(
                 Portal(
@@ -110,16 +117,20 @@ object PortalCommand : Command {
                     blockState.blockState.block,
                     destination,
                     sourceWorld,
-                    (0).toUByte(),
-                    (0).toUByte(),
-                    (0).toUByte(),
+                    (0),
+                    (0),
+                    (0),
                     flat,
-                    ignitionSource
+                    ignitionSource,
+                    permission
                 )
             )
         }
 
-        source.sendFeedback("Created portal from $sourceWorld to $destination with frame ${blockState.blockState.block}".success(), false)
+        source.sendFeedback(
+            "Created portal from $sourceWorld to $destination with frame ${blockState.blockState.block}".success(),
+            false
+        )
 
         return 1
     }
