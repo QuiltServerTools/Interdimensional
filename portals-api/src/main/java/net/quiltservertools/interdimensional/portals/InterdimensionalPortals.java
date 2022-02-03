@@ -2,6 +2,7 @@ package net.quiltservertools.interdimensional.portals;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
@@ -17,6 +18,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource;
 import net.quiltservertools.interdimensional.portals.portal.PortalPlacer;
 import net.quiltservertools.interdimensional.portals.portal.frame.CustomAreaHelper;
@@ -39,12 +41,10 @@ public class InterdimensionalPortals implements ModInitializer {
         PORTAL_BLOCK = new PortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
         Registry.register(Registry.BLOCK, new Identifier(InterdimensionalPortals.MOD_ID, "portal_block"), PORTAL_BLOCK);
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            for (RegistryKey<World> registryKey : server.getWorldRegistryKeys()) {
-                dims.put(registryKey.getValue(), registryKey);
-            }
-            portalLinkingStorage = (PortalLinkingStorage) server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(PortalLinkingStorage::fromNbt, PortalLinkingStorage::new, MOD_ID);
-        });
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> portalLinkingStorage = (PortalLinkingStorage) server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(PortalLinkingStorage::fromNbt, PortalLinkingStorage::new, MOD_ID));
+
+        ServerWorldEvents.LOAD.register((server, world) -> dims.put(world.getRegistryKey().getValue(), world.getRegistryKey()));
+        ServerWorldEvents.UNLOAD.register(((server, world) -> dims.remove(world.getRegistryKey().getValue())));
 
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLA_NETHERPORTAL_FRAMETESTER, CustomAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
