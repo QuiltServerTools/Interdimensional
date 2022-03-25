@@ -1,11 +1,11 @@
 package net.quiltservertools.interdimensional.command
 
+import com.github.quiltservertools.interdimensional.gui.DimensionCreateGUI
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
-import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 
 object CreateCommand : Command {
     override fun register(): LiteralCommandNode<ServerCommandSource> {
@@ -18,7 +18,7 @@ object CreateCommand : Command {
     }
 
     private fun createSgui(ctx: CommandContext<ServerCommandSource>): Int {
-        CreateGuiHandler(ctx.source.player).open()
+        DimensionCreateGUI(ctx.source.player).open()
         return 1
     }
 }

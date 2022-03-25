@@ -18,7 +18,7 @@ object RuntimeWorldManager {
 
     fun remove(handle: RuntimeWorldHandle) {
         runtimeDimensionHandlers.remove(handle)
-        Interdimensional.LOGGER.info("Removed dimension${handle.asWorld().registryKey.value}")
+        Interdimensional.LOGGER.info("Removed dimension ${handle.asWorld().registryKey.value}")
         handle.delete()
     }
 

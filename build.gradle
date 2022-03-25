@@ -88,6 +88,8 @@ dependencies {
     modImplementation(include("xyz.nucleoid:fantasy:0.4.4+1.18.2"))
     modImplementation(include("me.lucko:fabric-permissions-api:0.1-SNAPSHOT"))
     modImplementation(include("eu.pb4:sgui:1.0.0+1.18.1"))
+    implementation(include('com.ginsberg:cirkle:1.0.1'))
+
 
     subprojects.forEach {
         implementation project(path: ":${it.name}", configuration: "namedElements")

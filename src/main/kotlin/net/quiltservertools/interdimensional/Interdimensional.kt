@@ -15,24 +15,19 @@ import org.apache.logging.log4j.Logger
 import xyz.nucleoid.fantasy.Fantasy
 
 object Interdimensional : ModInitializer {
-    
     lateinit var FANTASY: Fantasy
     val LOGGER: Logger = LogManager.getLogger()
     private lateinit var CONFIG: Config
 
     override fun onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(ServerStarted { server: MinecraftServer ->
-            serverStarting(
-                server
-            )
+            serverStarting(server)
         })
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping {
             serverStopping()
         })
         CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher: CommandDispatcher<ServerCommandSource>, _: Boolean ->
-            registerCommands(
-                dispatcher
-            )
+            registerCommands(dispatcher)
         })
     }
 
