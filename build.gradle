@@ -37,7 +37,7 @@ allprojects {
         // Fabric API
         modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-        modImplementation(include("eu.pb4:polymer:0.2.0-beta.21+1.18.1"))
+        modImplementation(include("eu.pb4:polymer:0.2.0-beta.29+1.18.2"))
     }
 
     processResources {
@@ -85,9 +85,9 @@ dependencies {
     // FLK
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modImplementation(include("xyz.nucleoid:fantasy:0.4.3+1.18-pre6"))
+    modImplementation(include("xyz.nucleoid:fantasy:0.4.4+1.18.2"))
     modImplementation(include("me.lucko:fabric-permissions-api:0.1-SNAPSHOT"))
-    modImplementation(include("eu.pb4:sgui:1.0.0-rc6+1.18-pre5"))
+    modImplementation(include("eu.pb4:sgui:1.0.0+1.18.1"))
 
     subprojects.forEach {
         implementation project(path: ":${it.name}", configuration: "namedElements")

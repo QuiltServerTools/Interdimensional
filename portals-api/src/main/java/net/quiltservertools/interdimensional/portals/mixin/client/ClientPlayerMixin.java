@@ -65,7 +65,7 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
 
     @Unique
     public void updateCustomNausea() {
-        if (this.client.currentScreen != null && !this.client.currentScreen.isPauseScreen() && !(this.client.currentScreen instanceof DeathScreen)) {
+        if (this.client.currentScreen != null && !this.client.currentScreen.shouldPause() && !(this.client.currentScreen instanceof DeathScreen)) {
             if (this.client.currentScreen instanceof HandledScreen) {
                 this.closeHandledScreen();
             }

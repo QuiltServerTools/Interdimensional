@@ -3,8 +3,6 @@
   "package": "net.quiltservertools.interdimensional.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ChunkGeneratorSettingsAccessor",
-    "ChunkGeneratorSettingsMixin",
     "NoiseChunkGeneratorAccessor"
   ],
   "injectors": {

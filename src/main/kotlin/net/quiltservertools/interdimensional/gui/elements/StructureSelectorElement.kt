@@ -9,8 +9,6 @@ import net.minecraft.item.Items
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.world.gen.chunk.StructureConfig
-import net.minecraft.world.gen.chunk.StructuresConfig
 import net.minecraft.world.gen.feature.FeatureConfig
 import net.minecraft.world.gen.feature.StructureFeature
 import net.quiltservertools.interdimensional.gui.CreateGuiHandler
@@ -51,7 +49,7 @@ class StructureSelectorElement(val handler: CreateGuiHandler) : LinkComponent {
     }
 
     override fun setResult(handler: CreateGuiHandler) {
-        var config = handler.structuresConfig
+        /*var config = handler.structuresConfig
         var strongholdOptional = Optional.of(StructuresConfig.DEFAULT_STRONGHOLD)
         if (config.isPresent) {
             val stronghold = config.get().stronghold
@@ -69,7 +67,7 @@ class StructureSelectorElement(val handler: CreateGuiHandler) : LinkComponent {
                     ?: HashMap<StructureFeature<FeatureConfig>, StructureConfig>().toMutableMap()
             )
         )
-        handler.structuresConfig = config
+        handler.structuresConfig = config*/
     }
 
     class ComponentCallback(val world: ServerWorld?, private val component: StructureSelectorElement) :

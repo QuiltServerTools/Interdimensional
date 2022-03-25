@@ -8,6 +8,7 @@ import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
@@ -50,11 +51,11 @@ public class PortalIgnitionSource {
     }
 
     public boolean isWater() {
-        return FluidTags.WATER.contains(Registry.FLUID.get(ignitionSourceID));
+        return Registry.FLUID.getEntry(RegistryKey.of(Registry.FLUID_KEY, ignitionSourceID)).get().isIn(FluidTags.WATER);
     }
 
     public boolean isLava() {
-        return FluidTags.LAVA.contains(Registry.FLUID.get(ignitionSourceID));
+        return Registry.FLUID.getEntry(RegistryKey.of(Registry.FLUID_KEY, ignitionSourceID)).get().isIn(FluidTags.LAVA);
     }
 
     public static boolean isRegisteredIgnitionSourceWith(Item item) {
